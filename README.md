@@ -1,2 +1,1 @@
-This is our first file.
-Who wants to set up our directory? Let's get this thing started.
+will the real freshfarmer please standup, please stand up.
