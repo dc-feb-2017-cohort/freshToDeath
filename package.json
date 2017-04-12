@@ -1,0 +1,28 @@
+{
+  "name": "group1",
+  "version": "1.0.0",
+  "description": "Farmers market app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dc-feb-2017-cohort/freshToDeath.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dc-feb-2017-cohort/freshToDeath/issues"
+  },
+  "homepage": "https://github.com/dc-feb-2017-cohort/freshToDeath#readme",
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "express-session": "^1.15.2",
+    "hbs": "^4.0.1",
+    "pg-promise": "^5.6.4"
+  }
+}
