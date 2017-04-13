@@ -1,3 +1,4 @@
+// require('any-promise/register/bluebird');
 const express = require('express');
 const Promise = require('bluebird');
 const session = require('express-session');
@@ -19,15 +20,14 @@ app.use(session({
     maxAge: 600000000
   }
 }));
-//END MODULE IMPORTING/SETUP
-
-//BEGIN ROUTING FUNCTIONS
 
 app.use(function(req, resp, next) {
   resp.locals.session = req.session;
   next();
 });
+//END MODULE IMPORTING/SETUP
 
+//BEGIN ROUTING FUNCTIONS
 app.get('/login', function(req, resp) {
   resp.render('login.hbs');
 });
@@ -57,18 +57,31 @@ app.get('/', function(req, res){ //renders search/home page with search_page tem
 });
 
 app.get('/search_results', function(req, res) {  //receives search parameter from search_page form
-     let search_input = req.query.zipsearch; //assigns search query parameter to search_input variable
-     return getResults(search_input) //API query happens here
+     let zip_search_input = req.query.zipsearch; //assigns search query parameter to zip_search_input variable
+     return getResults(zip_search_input) //API query happens here
      .then(function(usda_results) {
           return searchResultsHandler(usda_results);
      })
-     .then(function(usda_marketname_results) {
-          res.render('search_results.hbs', {
-               usda_results: usda_marketname_results//sends results from API call to search_results page
-          });
+     .then(function (usda_marketinfo_results) {
+       return arrayOfIDAPICalls(usda_marketinfo_results);
      })
+     .then(function(result_of_arrayOfAPICalls){
+       return Promise.map(result_of_arrayOfAPICalls,function(each){
+         return popsicle.request(each);
+       });
+     })
+      .then(function(market_detail_results) {
+        var market_body = market_detail_results.map(function (item){
+          return JSON.parse(item.body);
+        });
+        console.log(market_body);
+        res.render('search_results.hbs', {
+            //  usda_results: usda_marketinfo_results,
+             market_detail_results: market_body//sends results from API call to search_results page
+        });
+      })
      .catch(function(err){
-     console.log("errror calder",err.message);
+     console.log("errror Calder: ",err.message);
      });
 });
 
@@ -95,28 +108,60 @@ app.get('/signup', function(req, resp) {
 // });
 
 
-function getResults(search_input) {
+function getResults(zip_search_input) {
      return popsicle.request({
        method: 'GET',
-       url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + search_input,
+       url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip_search_input,
      })
        .then(function (res) {
           return res.body;
-       })
+       });
   }
 
   function searchResultsHandler(searchresults) { //this function handles the JSON returned from USDA API and narrows it down to an array of marketnames
        return (new Promise (function(accept, reject) { //promisifies the function to be part of the promise chain above
-            let market_names = [];
+            let market_info = [];
             var parsedresults = JSON.parse(searchresults);
-            console.log("AAAARON");
+            // console.log("AAAARON");
             for (var key in parsedresults.results) {
-               market_names.push(parsedresults.results[key].marketname);
+               market_info.push({id : parsedresults.results[key].id, marketname: parsedresults.results[key].marketname.substr(4, parsedresults.results[key].marketname.length)});
             }
-            console.log(market_names);
-            accept(market_names);
+            accept(market_info);
        }));
+     }
+
+
+function arrayOfIDAPICalls(marketInfoResults) {
+  let arrayofAPIrequests = [];
+  arrayofAPIrequests = marketInfoResults.map(function (object) {
+    return {
+      method: 'GET',
+      url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + object.id,
+    };
+  });
+  return(new Promise(function(accept,reject){
+    accept(arrayofAPIrequests);
+  }));
 }
+
+
+
+
+
+
+
+//     .then(function (res) {
+//       let poop = JSON.parse(res.body);
+//       arrayOfMarketDetailResults.push(poop);
+//       // console.log(arrayOfMarketDetailResults);
+//       return arrayOfMarketDetailResults;
+//     });
+//   });
+// }
+
+
+// arrayOfIDAPICalls([{id: 1002192}, {id: 1002192}]);
+// console.log(arrayOfMarketDetailResults);
 
 //EXPRESS LISTEN FUNCTION BELOW (MUST STAY AT THE BOTTOM OF THE FILE)
 app.listen(3000, function() {
