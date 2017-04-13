@@ -30,11 +30,11 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
      let search_input = req.query.zipsearch; //assigns search query parameter to search_input variable
      return getResults(search_input) //API query happens here
      .then(function(usda_results) {
-          return searchResultsHandler(usda_results);
+          return searchResultsHandler(usda_results); //this function is defined at the bottom of the file (it narrows the results data to an array of marketnames)
      })
      .then(function(usda_marketname_results) {
           res.render('search_results.hbs', {
-               usda_results: usda_marketname_results//sends results from API call to search_results page
+               usda_results: usda_marketname_results //sends results from API call to search_results page and renders it on the page
           });
      })
      .catch(function(err){
@@ -43,25 +43,23 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
 });
 
 
-function getResults(search_input) {
+function getResults(search_input) { //this function uses the popsicle module to repurpose the AJAX part of the API to a request that can be used on the backend and then passed in the promise chain above
      return popsicle.request({
        method: 'GET',
-       url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + search_input,
+       url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + search_input, //this is what is sent to the USDA API when it is called
      })
        .then(function (res) {
           return res.body;
        })
   }
 
-  function searchResultsHandler(searchresults) { //this function handles the JSON returned from USDA API and narrows it down to an array of marketnames
+  function searchResultsHandler(searchresults) { //this function handles the JSON object (that is in a string) which is returned from USDA API and narrows it down to an array of marketnames
        return (new Promise (function(accept, reject) { //promisifies the function to be part of the promise chain above
             let market_names = [];
-            var parsedresults = JSON.parse(searchresults);
-            console.log("AAAARON");
-            for (var key in parsedresults.results) {
-               market_names.push(parsedresults.results[key].marketname);
+            var parsedresults = JSON.parse(searchresults); //this turns the searchresults which are a string into an JSON object that can be narrowed to marketnames below using dot and subscript notation
+            for (var index in parsedresults.results) {
+               market_names.push(parsedresults.results[index].marketname.substr(4, parsedresults.results.length));
             }
-            console.log(market_names);
             accept(market_names);
        }));
 }
