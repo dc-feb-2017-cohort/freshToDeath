@@ -74,7 +74,11 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
         var market_body = market_detail_results.map(function (item){
           return JSON.parse(item.body);
         });
-        console.log(market_body);
+        let coordinates = market_body.map(function(item) {
+          return getCoordsFromUsda(item.marketdetails.GoogleLink);
+        }); 
+        console.log(coordinates);
+        // console.log(market_body);
         res.render('search_results.hbs', {
             //  usda_results: usda_marketinfo_results,
              market_detail_results: market_body//sends results from API call to search_results page
@@ -107,7 +111,7 @@ app.get('/signup', function(req, resp) {
 //     .catch(next);
 // });
 
-
+// BEGIN HELPER FUNCTION DEFINITIONS --------------------------------
 function getResults(zip_search_input) {
      return popsicle.request({
        method: 'GET',
@@ -130,7 +134,6 @@ function getResults(zip_search_input) {
        }));
      }
 
-
 function arrayOfIDAPICalls(marketInfoResults) {
   let arrayofAPIrequests = [];
   arrayofAPIrequests = marketInfoResults.map(function (object) {
@@ -144,24 +147,28 @@ function arrayOfIDAPICalls(marketInfoResults) {
   }));
 }
 
-
-
-
-
-
-
-//     .then(function (res) {
-//       let poop = JSON.parse(res.body);
-//       arrayOfMarketDetailResults.push(poop);
-//       // console.log(arrayOfMarketDetailResults);
-//       return arrayOfMarketDetailResults;
-//     });
-//   });
-// }
-
-
-// arrayOfIDAPICalls([{id: 1002192}, {id: 1002192}]);
-// console.log(arrayOfMarketDetailResults);
+function getCoordsFromUsda(string) {
+  let lastChar;
+  let cord = {};
+  for (var i = 26; i < string.length; i++) {
+    if (string[i] === "%") {
+      lastChar = (i - 1);
+      let difference = lastChar - 25;
+      cord.lat = string.substr(26, difference);
+      break;
+    }
+  }
+  let secondStart = lastChar + 7;
+  for(var j = secondStart; j < string.length; j++) {
+    if (string[j] === "%") {
+      lastChar = (j - 1);
+      let difference = lastChar - secondStart + 1;
+      cord.long = string.substr(secondStart, difference);
+      break;
+    }
+  }
+  return cord;
+}
 
 //EXPRESS LISTEN FUNCTION BELOW (MUST STAY AT THE BOTTOM OF THE FILE)
 app.listen(3000, function() {
