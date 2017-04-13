@@ -1,8 +1,31 @@
 #search_form{
      text-align: center;
-     background-color: rgb(16, 153, 83);
+
 }
 #search_form > input {
      width: 200px;
      height: 30px;
+}
+
+h1 {
+  text-align: center;
+}
+
+h5 {
+  text-align: center;
+}
+
+#header {
+  padding: 5px 0;
+  width: 100%;
+  border: 5px solid black;
+  text-align: center;
+}
+
+#sign_up {
+  text-align: center;
+}
+
+.cool {
+  text-align: center;
 }
