@@ -1,3 +1,4 @@
+// require('any-promise/register/bluebird');
 const express = require('express');
 const Promise = require('bluebird');
 const session = require('express-session');
@@ -19,15 +20,14 @@ app.use(session({
     maxAge: 600000000
   }
 }));
-//END MODULE IMPORTING/SETUP
-
-//BEGIN ROUTING FUNCTIONS
 
 app.use(function(req, resp, next) {
   resp.locals.session = req.session;
   next();
 });
+//END MODULE IMPORTING/SETUP
 
+//BEGIN ROUTING FUNCTIONS
 app.get('/login', function(req, resp) {
   resp.render('login.hbs');
 });
@@ -57,18 +57,37 @@ app.get('/', function(req, res){ //renders search/home page with search_page tem
 });
 
 app.get('/search_results', function(req, res) {  //receives search parameter from search_page form
-     let search_input = req.query.zipsearch; //assigns search query parameter to search_input variable
-     return getResults(search_input) //API query happens here
+     let zip_search_input = req.query.zipsearch; //assigns search query parameter to zip_search_input variable
+     return getResults(zip_search_input) //API query happens here
      .then(function(usda_results) {
           return searchResultsHandler(usda_results); //this function is defined at the bottom of the file (it narrows the results data to an array of marketnames)
      })
-     .then(function(usda_marketname_results) {
-          res.render('search_results.hbs', {
-               usda_results: usda_marketname_results //sends results from API call to search_results page and renders it on the page
-          });
+
+     .then(function (usda_marketinfo_results) {
+       return arrayOfIDAPICalls(usda_marketinfo_results);
      })
+     .then(function(result_of_arrayOfAPICalls){
+       return Promise.map(result_of_arrayOfAPICalls,function(each){
+         return popsicle.request(each);
+       });
+
+     })
+      .then(function(market_detail_results) {
+        var market_body = market_detail_results.map(function (item){
+          return JSON.parse(item.body);
+        });
+        let coordinates = market_body.map(function(item) {
+          return getCoordsFromUsda(item.marketdetails.GoogleLink);
+        }); 
+        console.log(coordinates);
+        // console.log(market_body);
+        res.render('search_results.hbs', {
+            //  usda_results: usda_marketinfo_results,
+             market_detail_results: market_body//sends results from API call to search_results page
+        });
+      })
      .catch(function(err){
-     console.log("errror calder",err.message);
+     console.log("errror Calder: ",err.message);
      });
 });
 
@@ -95,25 +114,66 @@ app.get('/signup', function(req, resp) {
 // });
 
 
-function getResults(search_input) { //this function uses the popsicle module to repurpose the AJAX part of the API to a request that can be used on the backend and then passed in the promise chain above
+// BEGIN HELPER FUNCTION DEFINITIONS --------------------------------
+function getResults(zip_search_input) {
      return popsicle.request({
        method: 'GET',
-       url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + search_input, //this is what is sent to the USDA API when it is called
+       url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip_search_input,
+
      })
        .then(function (res) {
           return res.body;
-       })
+       });
   }
 
   function searchResultsHandler(searchresults) { //this function handles the JSON object (that is in a string) which is returned from USDA API and narrows it down to an array of marketnames
        return (new Promise (function(accept, reject) { //promisifies the function to be part of the promise chain above
-            let market_names = [];
-            var parsedresults = JSON.parse(searchresults); //this turns the searchresults which are a string into an JSON object that can be narrowed to marketnames below using dot and subscript notation
-            for (var index in parsedresults.results) {
-               market_names.push(parsedresults.results[index].marketname.substr(4, parsedresults.results.length));
+
+            let market_info = [];
+            var parsedresults = JSON.parse(searchresults);
+            // console.log("AAAARON");
+            for (var key in parsedresults.results) {
+               market_info.push({id : parsedresults.results[key].id, marketname: parsedresults.results[key].marketname.substr(4, parsedresults.results[key].marketname.length)});
             }
-            accept(market_names);
+            accept(market_info);
+
        }));
+     }
+
+function arrayOfIDAPICalls(marketInfoResults) {
+  let arrayofAPIrequests = [];
+  arrayofAPIrequests = marketInfoResults.map(function (object) {
+    return {
+      method: 'GET',
+      url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/mktDetail?id=" + object.id,
+    };
+  });
+  return(new Promise(function(accept,reject){
+    accept(arrayofAPIrequests);
+  }));
+}
+
+function getCoordsFromUsda(string) {
+  let lastChar;
+  let cord = {};
+  for (var i = 26; i < string.length; i++) {
+    if (string[i] === "%") {
+      lastChar = (i - 1);
+      let difference = lastChar - 25;
+      cord.lat = string.substr(26, difference);
+      break;
+    }
+  }
+  let secondStart = lastChar + 7;
+  for(var j = secondStart; j < string.length; j++) {
+    if (string[j] === "%") {
+      lastChar = (j - 1);
+      let difference = lastChar - secondStart + 1;
+      cord.long = string.substr(secondStart, difference);
+      break;
+    }
+  }
+  return cord;
 }
 
 //EXPRESS LISTEN FUNCTION BELOW (MUST STAY AT THE BOTTOM OF THE FILE)

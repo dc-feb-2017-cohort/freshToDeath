@@ -1,2 +1,13 @@
 <!-- TAG BELOW RECEIVES RESULTS FROM THE APP.GET CALL ON THE BACKEND.JS FILE WHICH IS CALLING THE USDA API  -->
-{{usda_results}} 
+{{#each market_detail_results}}
+<br>
+{{marketdetails.Address}}
+{{marketdetails.GoogleLink}}
+{{marketdetails.Products}}
+{{marketdetails.Schedule}}
+<br>
+{{/each}}
+
+<!-- {{market_detail_results}} -->
+
+<!-- {{market_detail_results}} -->
