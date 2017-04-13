@@ -7,8 +7,8 @@ const pgp = require('pg-promise')({
 const bodyParser = require('body-parser');
 const app = express();
 const bcrypt = require('bcrypt');
-const config = require('./config.js');
-const db = pgp(config);
+// const config = require('./config.js');
+// const db = pgp(config);
 const popsicle = require('popsicle');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -16,12 +16,42 @@ app.set('view engine', 'hbs');
 app.use(session({
   secret: 'topsecret',
   cookie: {
-    maxAge: 60000000
+    maxAge: 600000000
   }
 }));
 //END MODULE IMPORTING/SETUP
 
 //BEGIN ROUTING FUNCTIONS
+
+app.use(function(req, resp, next) {
+  resp.locals.session = req.session;
+  next();
+});
+
+app.get('/login', function(req, resp) {
+  resp.render('login.hbs');
+});
+
+// app.post('/submit_login', function(req, resp) {
+//   var username = req.body.username;
+//   var password = req.body.password;
+//   db.one(//SQL scheme goes here//)
+//   .then(function(result) {
+//     return bcrypt.compare(password, result.password);
+//   })
+//   .then(function(matched) {
+//     if (matched) {
+//       req.session.loggedInUser = username;
+//       resp.redirect('/');
+//     } else {
+//       resp.redirect('/login');
+//     }
+//   })
+//     .catch(function(err) {
+//       resp.redirect('/login');
+//   });
+// });
+
 app.get('/', function(req, res){ //renders search/home page with search_page template when user requests it
      res.render('search_page.hbs');
 });
@@ -41,6 +71,28 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
      console.log("errror calder",err.message);
      });
 });
+
+app.get('/signup', function(req, resp) {
+  resp.render('signup.hbs');
+});
+
+// app.post('/submit_registration', function(req, res, next) {
+//   var info = req.body;
+//   var username = req.body.username;
+//   var email = req.body.email;
+//   var password = req.body.password;
+//   bcrypt.hash(info.password, 10)
+//     .then(function(encryptedPassword) {
+//       console.log(encryptedPassword);
+//       return db.none(`//SQL schema goes here//)`,
+//       [info.username, info.email, encryptedPassword]);
+//     })
+//     .then(function() {
+//       req.session.loggedInUser = info.username;
+//       res.redirect('/login');
+//     })
+//     .catch(next);
+// });
 
 
 function getResults(search_input) {
