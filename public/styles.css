@@ -1,27 +1,87 @@
+
+/*SEARCH PAGE STYLES!!!!!!!!!!!!SEARCH PAGE STYLES!!!!!!!!!!!*/
+#loginid{
+     float: right;
+     padding-bottom: 7px;
+}
+#intro{
+     height: 100vh;
+     background-image: url("/23.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+  color: black;
+}
 #search_form{
      text-align: center;
-
 }
 #search_form > input {
-     width: 200px;
+     width: 250px;
      height: 30px;
+     text-align: left;
 }
 
+<<<<<<< HEAD
 h1 {
   text-align: center;
   color: white;
   font-style: italic;
+=======
+#intro h1 {
+ padding-top: 5vh;
+ text-align: center;
+ color: black;
+ font-size: 60px;
+ font-family: 'Shrikhand', cursive;
+}
+.scrollclass{
+     text-align: center;
+     padding-top: 55vh;
+>>>>>>> 2ac63053f4840414a85f6c691699c51694c88971
 }
 
-h5 {
+#intro h5 {
   text-align: center;
+  font-family: 'Pragati Narrow', sans-serif;
+  font-size: 30px;
+  color: black;
+}
+
+#intro a {
+     color: rgb(159, 11, 156);
+}
+.col-lg-4 {
+     height: 50vh;
+     text-align: center;
+
+}
+#lefthead{
+     float: left;
+     padding-left: 1vh;
+}
+#righthead{
+     float: right;
+     padding-top: 2vh;
+     padding-right: 1vh;
 }
 
 #header {
-  padding: 5px 0;
   width: 100%;
+<<<<<<< HEAD
   border: 3px solid black;
   text-align: center;
+=======
+  text-align: left;
+}
+#left_text{
+     padding-top: 10px;
+     font-family: 'Yanone Kaffeesatz', sans-serif;
+     font-size: 1.8em;
+     color: rgb(125, 78, 15);
+}
+p {
+font-family: 'Yanone Kaffeesatz', sans-serif;
+>>>>>>> 2ac63053f4840414a85f6c691699c51694c88971
 }
 
 #sign_up {
@@ -30,4 +90,52 @@ h5 {
 
 .cool {
   text-align: center;
+}
+
+p {
+     font-size: 20px;
+}
+
+#left_content img {
+     border-radius: 50%;
+     padding-top: 30px;
+     padding-bottom: 30px;
+     width: 60%
+
+}
+
+#right_content img {
+     width: 50%;
+     padding-bottom: 20px;
+}
+
+#middle_content img {
+     border-radius: 50%;
+     padding-top: 30px;
+     padding-bottom: 30px;
+     width: 60%
+}
+#content {
+font-family: 'Yanone Kaffeesatz', sans-serif;
+}
+#content h3{
+font-size: 35px;
+}
+
+
+/*SIGN UP STYLES!!!!!!!!!SIGN UP STYLES!!!!!!!!*/
+#sign_up {
+     padding-left: 5vh;
+     margin-top: -10px;
+}
+
+/*#signuphead{
+     padding-top: 5vh;
+     padding-left: 5vh;
+}*/
+.signel{
+     height: 30px;
+     width: 200px;
+     text-align: center;
+     margin: 5px;
 }
