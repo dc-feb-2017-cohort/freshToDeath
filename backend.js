@@ -17,11 +17,6 @@ const popsicle = require('popsicle');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.set('view engine', 'hbs');
-
-const db = pgp({
-  database: 'farmdb'
-})
-
 app.use(session({
   secret: 'topsecret',
   cookie: {
@@ -40,18 +35,11 @@ app.get('/login', function(req, resp) {
 
 });
 
-<<<<<<< HEAD
-app.post('/submit_login', function(req, resp) {
-  var username = req.body.username;
-  var password = req.body.password;
-  db.one(`select password from shoppers where name = $1`, [username])
-=======
 
 app.post('/submit_login', function(req, resp) {
   var username = req.body.username;
   var password = req.body.password;
   db.one(`select password from shoppers where username =  $1`, [username])
->>>>>>> e9382f27dd77cfbb9c92780db4b2bb391e9de4ae
   .then(function(result) {
     return bcrypt.compare(password, result.password);
   })
@@ -60,15 +48,6 @@ app.post('/submit_login', function(req, resp) {
       req.session.loggedInUser = username;
       resp.redirect('/');
     } else {
-<<<<<<< HEAD
-      resp.redirect('/login');
-    }
-  })
-    .catch(function(err) {
-      resp.redirect('/login');
-  });
-});
-=======
       resp.redirect('/');
     }
   })
@@ -79,7 +58,6 @@ app.post('/submit_login', function(req, resp) {
 
 
 
->>>>>>> e9382f27dd77cfbb9c92780db4b2bb391e9de4ae
 
 app.get('/', function(req, res){ //renders search/home page with search_page template when user requests it
      res.render('search_page.hbs');
@@ -114,22 +92,13 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
         });
         poop.coordinates = poop.market_detail_results.map(function(item) { //maps over the market_body array and uses the getCoordsFromUsda helper function to return the latitude and longitude for each item and then insert them into individual objects, and finally assigns them to the array "coordinates"
           return getCoordsFromUsda(item.marketdetails.GoogleLink);
-<<<<<<< HEAD
-        });
-        console.log(coordinates);
-        // console.log(market_body);
-        res.render('search_results.hbs', {
-            //  usda_results: usda_marketinfo_results,
-             market_detail_results: market_body//sends results from API call to search_results page
-=======
 
->>>>>>> e9382f27dd77cfbb9c92780db4b2bb391e9de4ae
         });
         // console.log(coordinates);
       // .then(function(coordinates) {
         //GOOGLE MAPS API CALL NEEDS TO HAPPEN HERE. DO WE HAVE TO USE SOCKET.IO???
         console.log(poop);
-        res.render('search_results.hbs', poop); 
+        res.render('search_results.hbs', poop);
             //  zip_search_results: usda_marketinfo_objects_array,
         //    details: details,
         //    coordinates: poop.coordinates,
