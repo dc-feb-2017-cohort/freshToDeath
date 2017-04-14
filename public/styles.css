@@ -21,6 +21,12 @@
      text-align: left;
 }
 
+<<<<<<< HEAD
+h1 {
+  text-align: center;
+  color: white;
+  font-style: italic;
+=======
 #intro h1 {
  padding-top: 5vh;
  text-align: center;
@@ -31,6 +37,7 @@
 .scrollclass{
      text-align: center;
      padding-top: 55vh;
+>>>>>>> 2ac63053f4840414a85f6c691699c51694c88971
 }
 
 #intro h5 {
@@ -60,6 +67,10 @@
 
 #header {
   width: 100%;
+<<<<<<< HEAD
+  border: 3px solid black;
+  text-align: center;
+=======
   text-align: left;
 }
 #left_text{
@@ -70,6 +81,7 @@
 }
 p {
 font-family: 'Yanone Kaffeesatz', sans-serif;
+>>>>>>> 2ac63053f4840414a85f6c691699c51694c88971
 }
 
 #sign_up {
