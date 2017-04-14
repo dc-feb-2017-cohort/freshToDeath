@@ -1,13 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+       #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
+  </head>
+  <body>
+    <h3>Your Local Farmers Markets</h3>
+    <br>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var uluru = {lat: 33.805672, lng: -84.239409}; //DO WE HAVE TO PUT THIS ON THE FRONT END AND USE SOCKET.IO???
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBb6ScimQwZIe_U4WWbctFa2SeR7qOK6Ck&callback=initMap">
+    </script>
+  </body>
+</html>
+
+
 <!-- TAG BELOW RECEIVES RESULTS FROM THE APP.GET CALL ON THE BACKEND.JS FILE WHICH IS CALLING THE USDA API  -->
-{{#each market_detail_results}}
-<br>
-{{marketdetails.Address}}
-{{marketdetails.GoogleLink}}
-{{marketdetails.Products}}
-{{marketdetails.Schedule}}
-<br>
-{{/each}}
+{{details.0.marketname}} <!-- THIS IS CURRENTLY PRINTING THE FIRST OBJECT IN THE ARRAY'S MARKETNAME; NEED TO FIX THIS SO IT PRINTS IN LINE WITH EACH OF THE RESULTS BELOW-->
 
-<!-- {{market_detail_results}} -->
-
-<!-- {{market_detail_results}} -->
+<div class="fun">
+  {{#each market_detail_results}}
+  Address: {{marketdetails.Address}}
+  <br><br>
+  Products: {{marketdetails.Products}}
+  <br><br>
+  Schedule: {{marketdetails.Schedule}}
+  <hr>
+  {{/each}}
+</div>
