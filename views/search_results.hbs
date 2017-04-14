@@ -1,13 +1,58 @@
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Marker Clustering</title>
+
+  </head>
+  <body> -->
+  <style>
+    /* Always set the map height explicitly to define the size of the div
+     * element that contains the map. */
+    #map {
+      height: 80%;
+    }
+    /* Optional: Makes the sample page fill the window. */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <div id="map"></div>
+  <script type="text/javascript">
+    var locations = [];
+    {{#each coordinates}}
+      locations.push([{{this.lat}}, {{this.lng}}]);
+    {{/each}}
+    var center = {
+      lat: {{coordinates.0.lat}},
+      lng: {{coordinates.0.lng}}
+    };
+  </script>
+  <script src="googlemapsscript.js"></script>
+  <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBb6ScimQwZIe_U4WWbctFa2SeR7qOK6Ck&callback=initMap"></script>
+  <!--
+  </body>
+</html> -->
+
+
 <!-- TAG BELOW RECEIVES RESULTS FROM THE APP.GET CALL ON THE BACKEND.JS FILE WHICH IS CALLING THE USDA API  -->
-{{#each market_detail_results}}
-<br>
-{{marketdetails.Address}}
-{{marketdetails.GoogleLink}}
-{{marketdetails.Products}}
-{{marketdetails.Schedule}}
-<br>
+{{#each poop}}
+  {{marketnames.marketname}}
 {{/each}}
 
-<!-- {{market_detail_results}} -->
+   <!-- THIS IS CURRENTLY PRINTING THE FIRST OBJECT IN THE ARRAY'S MARKETNAME; NEED TO FIX THIS SO IT PRINTS IN LINE WITH EACH OF THE RESULTS BELOW-->
 
-<!-- {{market_detail_results}} -->
+<!-- <div class="fun">
+  {{#each market_detail_results}}
+  Address: {{marketdetails.Address}}
+  <br><br>
+  Products: {{marketdetails.Products}}
+  <br><br>
+  Schedule: {{marketdetails.Schedule}}
+  <hr>
+  {{/each}}
+</div> -->

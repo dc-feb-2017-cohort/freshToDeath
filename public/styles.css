@@ -83,6 +83,7 @@ font-family: 'Yanone Kaffeesatz', sans-serif;
   text-align: center;
 }
 
+=======
 p {
      font-size: 20px;
 }
@@ -112,3 +113,25 @@ font-family: 'Yanone Kaffeesatz', sans-serif;
 #content h3{
 font-size: 35px;
 }
+<<<<<<< HEAD
+=======
+
+
+/*SIGN UP STYLES!!!!!!!!!SIGN UP STYLES!!!!!!!!*/
+#sign_up {
+     padding-left: 5vh;
+     margin-top: -10px;
+}
+
+/*#signuphead{
+     padding-top: 5vh;
+     padding-left: 5vh;
+}*/
+.signel{
+     height: 30px;
+     width: 200px;
+     text-align: center;
+     margin: 5px;
+
+}
+>>>>>>> e9382f27dd77cfbb9c92780db4b2bb391e9de4ae
