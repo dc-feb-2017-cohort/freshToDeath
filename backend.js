@@ -60,8 +60,9 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
      let zip_search_input = req.query.zipsearch; //assigns search query parameter to zip_search_input variable
      return getResults(zip_search_input) //API query happens here
      .then(function(usda_results) {
-          return searchResultsHandler(usda_results);
+          return searchResultsHandler(usda_results); //this function is defined at the bottom of the file (it narrows the results data to an array of marketnames)
      })
+
      .then(function (usda_marketinfo_results) {
        return arrayOfIDAPICalls(usda_marketinfo_results);
      })
@@ -69,6 +70,7 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
        return Promise.map(result_of_arrayOfAPICalls,function(each){
          return popsicle.request(each);
        });
+
      })
       .then(function(market_detail_results) {
         var market_body = market_detail_results.map(function (item){
@@ -111,19 +113,22 @@ app.get('/signup', function(req, resp) {
 //     .catch(next);
 // });
 
+
 // BEGIN HELPER FUNCTION DEFINITIONS --------------------------------
 function getResults(zip_search_input) {
      return popsicle.request({
        method: 'GET',
        url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip_search_input,
+
      })
        .then(function (res) {
           return res.body;
        });
   }
 
-  function searchResultsHandler(searchresults) { //this function handles the JSON returned from USDA API and narrows it down to an array of marketnames
+  function searchResultsHandler(searchresults) { //this function handles the JSON object (that is in a string) which is returned from USDA API and narrows it down to an array of marketnames
        return (new Promise (function(accept, reject) { //promisifies the function to be part of the promise chain above
+
             let market_info = [];
             var parsedresults = JSON.parse(searchresults);
             // console.log("AAAARON");
@@ -131,6 +136,7 @@ function getResults(zip_search_input) {
                market_info.push({id : parsedresults.results[key].id, marketname: parsedresults.results[key].marketname.substr(4, parsedresults.results[key].marketname.length)});
             }
             accept(market_info);
+
        }));
      }
 
