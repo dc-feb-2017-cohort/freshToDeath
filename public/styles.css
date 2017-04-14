@@ -1,5 +1,5 @@
 
-
+/*SEARCH PAGE STYLES!!!!!!!!!!!!SEARCH PAGE STYLES!!!!!!!!!!!*/
 #loginid{
      float: right;
      padding-bottom: 7px;
@@ -108,4 +108,22 @@ font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 #content h3{
 font-size: 35px;
+}
+
+
+/*SIGN UP STYLES!!!!!!!!!SIGN UP STYLES!!!!!!!!*/
+#sign_up {
+     padding-left: 5vh;
+     margin-top: -10px;
+}
+
+/*#signuphead{
+     padding-top: 5vh;
+     padding-left: 5vh;
+}*/
+.signel{
+     height: 30px;
+     width: 200px;
+     text-align: center;
+     margin: 5px;
 }
