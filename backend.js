@@ -14,6 +14,11 @@ const popsicle = require('popsicle');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.set('view engine', 'hbs');
+
+const db = pgp({
+  database: 'farmdb'
+})
+
 app.use(session({
   secret: 'topsecret',
   cookie: {
@@ -32,25 +37,25 @@ app.get('/login', function(req, resp) {
   resp.render('login.hbs');
 });
 
-// app.post('/submit_login', function(req, resp) {
-//   var username = req.body.username;
-//   var password = req.body.password;
-//   db.one(//SQL scheme goes here//)
-//   .then(function(result) {
-//     return bcrypt.compare(password, result.password);
-//   })
-//   .then(function(matched) {
-//     if (matched) {
-//       req.session.loggedInUser = username;
-//       resp.redirect('/');
-//     } else {
-//       resp.redirect('/login');
-//     }
-//   })
-//     .catch(function(err) {
-//       resp.redirect('/login');
-//   });
-// });
+app.post('/submit_login', function(req, resp) {
+  var username = req.body.username;
+  var password = req.body.password;
+  db.one(`select password from shoppers where name = $1`, [username])
+  .then(function(result) {
+    return bcrypt.compare(password, result.password);
+  })
+  .then(function(matched) {
+    if (matched) {
+      req.session.loggedInUser = username;
+      resp.redirect('/');
+    } else {
+      resp.redirect('/login');
+    }
+  })
+    .catch(function(err) {
+      resp.redirect('/login');
+  });
+});
 
 app.get('/', function(req, res){ //renders search/home page with search_page template when user requests it
      res.render('search_page.hbs');
@@ -78,7 +83,7 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
         });
         let coordinates = market_body.map(function(item) {
           return getCoordsFromUsda(item.marketdetails.GoogleLink);
-        }); 
+        });
         console.log(coordinates);
         // console.log(market_body);
         res.render('search_results.hbs', {
