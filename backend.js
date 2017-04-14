@@ -1,10 +1,12 @@
 // require('any-promise/register/bluebird');
+var dbconfig = require('./config');
 const express = require('express');
 const Promise = require('bluebird');
 const session = require('express-session');
 const pgp = require('pg-promise')({
   promiseLib: Promise
 });
+var db = pgp(dbconfig);
 const bodyParser = require('body-parser');
 const app = express();
 const bcrypt = require('bcrypt');
@@ -29,28 +31,28 @@ app.use(function(req, resp, next) {
 
 //BEGIN ROUTING FUNCTIONS
 app.get('/login', function(req, resp) {
-  resp.render('login.hbs');
+
 });
 
-// app.post('/submit_login', function(req, resp) {
-//   var username = req.body.username;
-//   var password = req.body.password;
-//   db.one(//SQL scheme goes here//)
-//   .then(function(result) {
-//     return bcrypt.compare(password, result.password);
-//   })
-//   .then(function(matched) {
-//     if (matched) {
-//       req.session.loggedInUser = username;
-//       resp.redirect('/');
-//     } else {
-//       resp.redirect('/login');
-//     }
-//   })
-//     .catch(function(err) {
-//       resp.redirect('/login');
-//   });
-// });
+app.post('/submit_login', function(req, resp) {
+  var username = req.body.username;
+  var password = req.body.password;
+  db.one(`select password from shoppers where username =  $1`, [username])
+  .then(function(result) {
+    return bcrypt.compare(password, result.password);
+  })
+  .then(function(matched) {
+    if (matched) {
+      req.session.loggedInUser = username;
+      resp.redirect('/');
+    } else {
+      resp.redirect('/');
+    }
+  })
+    .catch(function(err) {
+      resp.redirect('/');
+  });
+});
 
 app.get('/', function(req, res){ //renders search/home page with search_page template when user requests it
      res.render('search_page.hbs');
@@ -78,7 +80,7 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
         });
         let coordinates = market_body.map(function(item) {
           return getCoordsFromUsda(item.marketdetails.GoogleLink);
-        }); 
+        });
         console.log(coordinates);
         // console.log(market_body);
         res.render('search_results.hbs', {
@@ -95,23 +97,20 @@ app.get('/signup', function(req, resp) {
   resp.render('signup.hbs');
 });
 
-// app.post('/submit_registration', function(req, res, next) {
-//   var info = req.body;
-//   var username = req.body.username;
-//   var email = req.body.email;
-//   var password = req.body.password;
-//   bcrypt.hash(info.password, 10)
-//     .then(function(encryptedPassword) {
-//       console.log(encryptedPassword);
-//       return db.none(`//SQL schema goes here//)`,
-//       [info.username, info.email, encryptedPassword]);
-//     })
-//     .then(function() {
-//       req.session.loggedInUser = info.username;
-//       res.redirect('/login');
-//     })
-//     .catch(next);
-// });
+app.post('/signup', function(req, res, next) {
+ var info = req.body;
+  bcrypt.hash(info.password, 10)
+    .then(function(encryptedPassword) {
+      console.log("goldfish");
+      return db.none(`insert into shoppers values (default, $1, $2, $3)`,
+      [info.username, info.email, encryptedPassword]);
+    })
+    .then(function() {
+      req.session.loggedInUser = info.username;
+      res.redirect('/');
+    })
+    .catch(next);
+});
 
 
 // BEGIN HELPER FUNCTION DEFINITIONS --------------------------------
