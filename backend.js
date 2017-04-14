@@ -41,6 +41,7 @@ var poop = {};
 var coordinates;
 app.get('/search_results', function(req, res) {  //receives search parameter from search_page form
      let zip_search_input = req.query.zipsearch; //assigns search query parameter to zip_search_input variable
+
      return getResults(zip_search_input)
      .then(function (res) {
         return res.body;
@@ -51,11 +52,13 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
      .then(function (usda_marketinfo_objects_array) { //the objects from above are passed into this function
        poop.marketnames = usda_marketinfo_objects_array;
        return arrayOfIDAPICalls(usda_marketinfo_objects_array); //this helper function transforms the marketinfo array into an array of objects for mapping over to make the repeated calls to the USDA API to return the market detail data
+
      })
      .then(function(array_of_request_parameters){
        return Promise.map(array_of_request_parameters, function(each_object){ //we use the bluebird.map method here to asynchronously map over each item in the array and make an independent API call for each one of them
          return popsicle.request(each_object);//SECOND USDA API call; makes a series of calls with each market id as an argument
        });
+
      })
       .then(function(market_detail_results) { //returns an array of market details objects (with address, schedule, Google map link, and products sold)
         poop.market_detail_results = market_detail_results.map(function (item){ //maps over the objects in the market details array, parsing the JSON objects (specifically the "body" values), and assigning them to a market_body variable (which is an array)
@@ -86,22 +89,28 @@ app.get('/signup', function(req, resp) {
 
 
 
+
 // BEGIN HELPER FUNCTION DEFINITIONS --------------------------------
 function getResults(zip_search_input) {
      return popsicle.request({
        method: 'GET',
        url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip_search_input,
+
      })
   }
 
+
   function zipSearchResultsHandler(searchresults) { //this function handles the JSON returned from USDA API and narrows it down to an array of marketnames
+
        return (new Promise (function(accept, reject) { //promisifies the function to be part of the promise chain above
+
             let market_info = [];
             var parsedresults = JSON.parse(searchresults);
             for (var key in parsedresults.results) {
                market_info.push({id : parsedresults.results[key].id, marketname: parsedresults.results[key].marketname.substr(4, parsedresults.results[key].marketname.length)});
             }
             accept(market_info);
+
        }));
      }
 
