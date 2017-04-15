@@ -3,8 +3,8 @@
      padding-bottom: 7px;
 }
 #intro{
-     height: 100vh;
-     background-image: url("/23.jpg");
+  height: 100vh;
+  background-image: url("/23.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;
