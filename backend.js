@@ -11,8 +11,7 @@ var db = pgp(dbconfig);
 const bodyParser = require('body-parser');
 const app = express();
 const bcrypt = require('bcrypt');
-// const config = require('./config.js');
-// const db = pgp(config);
+
 const popsicle = require('popsicle');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -63,6 +62,7 @@ app.get('/', function(req, res){ //renders search/home page with search_page tem
      res.render('search_page.hbs');
 });
 
+
 var poop = {};
 var coordinates;
 app.get('/search_results', function(req, res) {  //receives search parameter from search_page form
@@ -98,7 +98,7 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
       // .then(function(coordinates) {
         //GOOGLE MAPS API CALL NEEDS TO HAPPEN HERE. DO WE HAVE TO USE SOCKET.IO???
         console.log(poop);
-        res.render('search_results.hbs', poop); 
+        res.render('search_results.hbs', poop);
             //  zip_search_results: usda_marketinfo_objects_array,
         //    details: details,
         //    coordinates: poop.coordinates,
@@ -113,7 +113,10 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
 app.get('/signup', function(req, resp) {
   resp.render('signup.hbs');
 });
-
+app.get('/logout', function (req, res){
+     req.session.loggedInUser = null;
+     res.redirect('/');
+});
 
 app.post('/signup', function(req, res, next) {
  var info = req.body;
