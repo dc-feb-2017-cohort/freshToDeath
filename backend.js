@@ -11,8 +11,7 @@ var db = pgp(dbconfig);
 const bodyParser = require('body-parser');
 const app = express();
 const bcrypt = require('bcrypt');
-// const config = require('./config.js');
-// const db = pgp(config);
+
 const popsicle = require('popsicle');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -62,6 +61,7 @@ app.post('/submit_login', function(req, resp) {
 app.get('/', function(req, res){ //renders search/home page with search_page template when user requests it
      res.render('search_page.hbs');
 });
+
 
 var poop = {};
 var coordinates;
@@ -113,7 +113,10 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
 app.get('/signup', function(req, resp) {
   resp.render('signup.hbs');
 });
-
+app.get('/logout', function (req, res){
+     req.session.loggedInUser = null;
+     res.redirect('/');
+});
 
 app.post('/signup', function(req, res, next) {
  var info = req.body;
