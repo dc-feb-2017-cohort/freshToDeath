@@ -113,8 +113,69 @@ font-family: 'Yanone Kaffeesatz', sans-serif;
 #content h3{
 font-size: 35px;
 }
-<<<<<<< HEAD
-=======
+
+/*MARKET PAGE STYLES*/
+
+#market_header {
+  width: 100%;
+  text-align: left;
+  border-bottom: 1px solid black;
+}
+
+#market_left img {
+  float: left;
+  /*position: relative;*/
+
+}
+
+#market_right {
+  padding-top: 50px;
+}
+
+#market_details {
+  text-align: center;
+  font-family: 'Pragati Narrow', sans-serif;
+  height: 300px;
+  border-bottom: 1px solid black;
+}
+
+#review_intro {
+  text-align: center;
+  font-family: 'Pragati Narrow', sans-serif;
+  height: 60px;
+  border-bottom: 1px solid black;
+
+}
+
+#row_one {
+  /*height:300px;*/
+  border-bottom: 1px solid black;
+  padding-bottom: 15px;
+}
+
+#row_two {
+  /*height:300px;*/
+  border-bottom: 1px solid black;
+  padding-bottom: 15px;
+}
+
+#review_one {
+  border-right: 1px solid black;
+}
+
+#review_three {
+  border-right: 1px solid black;
+}
+
+#write_review_intro {
+  text-align: center;
+  font-family: 'Pragati Narrow', sans-serif;
+  height: 60px;
+  border-bottom: 1px solid black;
+}
+#write_review {
+  text-align: center;
+}
 
 
 /*SIGN UP STYLES!!!!!!!!!SIGN UP STYLES!!!!!!!!*/
