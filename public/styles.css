@@ -9,7 +9,9 @@
   background-size: cover;
   background-position: top;
   color: black;
-  /*opacity: 0.7;*/
+
+  opacity: 0.7;
+
 }
 
 #intro img {
@@ -118,38 +120,41 @@ font-size: 35px;
 
 /*MARKET PAGE STYLES*/
 
-#market_header {
-  width: 100%;
-  text-align: left;
-  border-bottom: 1px solid black;
+#market_stand {
+  position: relative;
+  text-align: center;
+  height: auto;
+
 }
 
-#market_left img {
-  float: left;
-  /*position: relative;*/
-
+#market_left {
+  position: relative;
+  text-align: center;
+  height: auto;
 }
 
 #market_right {
   padding-top: 50px;
+  text-align: center;
+  position: relative;
+  height: auto;
 }
 
 #market_details {
   text-align: center;
   font-family: 'Pragati Narrow', sans-serif;
-  height: 300px;
-  border-bottom: 1px solid black;
+  height: auto;
+  /*border-bottom: 1px solid black;*/
 }
 
-#review_intro {
+#reviews {
   text-align: center;
   font-family: 'Pragati Narrow', sans-serif;
-  height: 60px;
-  border-bottom: 1px solid black;
 
 
 }
 
+<<<<<<< HEAD
 #row_one {
   /*height:300px;*/
   border-bottom: 1px solid black;
@@ -169,11 +174,23 @@ font-size: 35px;
 
 #review_two {
   /*border-top: 1px solid black;*/
+=======
+#star_rating {
+  text-align: center;
+  /*margin-left: 10px;*/
 }
 
-#review_three {
-  border-right: 1px solid black;
+#content_area {
+  text-align: center;
+  /*margin-right: 10px;*/
 }
+
+#write_review input {
+  width: 670px;
+>>>>>>> 1de5f8c49c3521be84de3aa5923604a959e41bd1
+}
+
+
 
 #write_review_intro {
   text-align: center;
