@@ -8,7 +8,7 @@ This app makes use of a United States Department of Agriculture API to populate 
 
 Technologies Used:
 
-Express, HTML, CSS, Handlebars, Node.js, NPM, JSON, GeoJSON
+Express, HTML, CSS, Handlebars, Javascript, jQuery, Node.js, NPM, GeoJSON
 
 Suggested Edits:
 
