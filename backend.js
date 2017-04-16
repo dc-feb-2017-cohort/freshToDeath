@@ -113,6 +113,25 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
      });
 });
 
+app.get('/market', function(req, resp, next) {
+  resp.render('market.hbs');
+  // let id = req.params.id;
+  // db.any(``)
+  //   .then(function(reviews) {
+  //     return [
+  //       reviews,
+  //       db.one(``)
+  //     ];
+  //   })
+  //   .spread(function(reviews, markets) {
+  //     resp.render('market.hbs', {
+  //       markets: markets,
+  //       reviews: reviews
+  //     });
+  //   })
+  //   .catch(next);
+});
+
 app.get('/signup', function(req, resp) {
   resp.render('signup.hbs');
 });
