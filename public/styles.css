@@ -9,9 +9,6 @@
   background-size: cover;
   background-position: top;
   color: black;
-
-  opacity: 0.7;
-
 }
 
 #intro img {
@@ -151,30 +148,8 @@ font-size: 35px;
   text-align: center;
   font-family: 'Pragati Narrow', sans-serif;
 
-
 }
 
-<<<<<<< HEAD
-#row_one {
-  /*height:300px;*/
-  border-bottom: 1px solid black;
-  /*padding-bottom: 15px;*/
-}
-
-#row_two {
-  /*height:300px;*/
-  border-bottom: 1px solid black;
-  /*padding-bottom: 15px;*/
-}
-
-#review_one {
-  border-right: 1px solid black;
-  /*border-top: 1px solid black;*/
-}
-
-#review_two {
-  /*border-top: 1px solid black;*/
-=======
 #star_rating {
   text-align: center;
   /*margin-left: 10px;*/
@@ -187,7 +162,6 @@ font-size: 35px;
 
 #write_review input {
   width: 670px;
->>>>>>> 1de5f8c49c3521be84de3aa5923604a959e41bd1
 }
 
 
@@ -200,10 +174,6 @@ font-size: 35px;
 }
 #write_review {
   text-align: center;
-}
-
-#stars {
-  display: inline-block;
 }
 
 
