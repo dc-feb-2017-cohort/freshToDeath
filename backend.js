@@ -60,8 +60,10 @@ app.get('/veg_search', function(req, res){ //renders search by ingredients page 
 });
 
 
+
 var market_info_array = [];
 var market_detail_results_array = [];
+
 var coordinates;
 app.get('/search_results', function(req, res) {  //receives search parameter from search_page form
      let zip_search_input = req.query.zipsearch; //assigns search query parameter to zip_search_input variable
@@ -90,6 +92,7 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
         coordinates = market_detail_results_array.map(function(item) { //maps over the market_body array and uses the getCoordsFromUsda helper function to return the latitude and longitude for each item and then insert them into individual objects, and finally assigns them to the array "coordinates"
           return getCoordsFromUsda(item.marketdetails.GoogleLink);
         });
+
         var mergegUSDAArray = mergeUSDAArrays(market_info_array, market_detail_results_array);
         res.render('search_results.hbs', {
           USDAinfo: mergegUSDAArray,
@@ -99,6 +102,7 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
       .then(function() {
         market_info_array = [];
         market_detail_results_array = [];
+
       })
      .catch(function(err){
      console.log(err.message);
