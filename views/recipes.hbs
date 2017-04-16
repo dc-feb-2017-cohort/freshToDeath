@@ -1,1 +1,23 @@
-{{recipes}}
+<!-- AARON"S EDITS -->
+<style media="screen">
+  .main {
+    margin-left: 150px;
+  }
+  img {
+    width: 150px;
+  }
+</style>
+<div class="main">
+  <h1>Your recipe search results</h1>
+  {{#each recipes}}
+  <br>
+  <h4>{{recipeName}} </h4><br>
+  Source: {{sourceDisplayName}}<br><br>
+  <img src="{{smallImageUrls}}" alt="recipe photo"><br><br>
+  Yummly Rating: {{rating}}<br>
+  Cuisine: {{attributes.cuisine}}<br>
+  Course: {{attributes.course}}<br>
+  Ingredients: {{ingredients}}
+  <br>
+  {{/each}}
+</div>

@@ -1,9 +1,26 @@
+
+
 <style>
   /* Always set the map height explicitly to define the size of the div
    * element that contains the map. */
+   #search_page_results {
+     /*background-image: url("/vegback.jpg");*/
+   }
+
   #map {
-    height: 80%;
+    height: 50%;
+    clear: both;
+    margin: 10px 190px 10px 190px;
   }
+
+  #style_results {
+    margin: 0 175px 175px 175px;
+    border: 5px solid red;
+    padding: 10px;
+    font-size: 15px;
+    background-color: white;
+  }
+
   /* Optional: Makes the sample page fill the window. */
   html, body {
     height: 100%;
@@ -11,15 +28,27 @@
     padding: 0;
   }
 </style>
+
+
 <div id="map"></div>
+<div id="search_page_results" class="container-fluid">
 <!-- TAG BELOW RECEIVES RESULTS FROM THE APP.GET CALL ON THE BACKEND.JS FILE WHICH IS CALLING THE USDA API  -->
-{{#each USDAinfo}}
-  {{marketname}}
-  {{address}}
-  {{googlelink}}
-  {{products}}
+<div id="style_results">
+  {{#each USDAinfo}}<br>
+  <h3>{{mapMarkerLetter}}: {{marketname}}</h3>
+  <h4>{{address}}
+  <a href="{{googlelink}}" target="_blank">Get directions</a></h4><br>
+  Products Offered:<br>{{products}}<br><br>
+  Schedule:<br>
   {{schedule}}
+  <br><br>
+  <form class="market_button" action="/market_page/{{marketID}}">
+    <input type="submit" value="MARKET PAGE"/>
+  </form>
+  <hr>
+
 {{/each}}
+</div>
 
 <script type="text/javascript">
   var locations = [];
@@ -34,3 +63,4 @@
 <script src="googlemapsscript.js"></script>
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBb6ScimQwZIe_U4WWbctFa2SeR7qOK6Ck&callback=initMap"></script>
+</div>

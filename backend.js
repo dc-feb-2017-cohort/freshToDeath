@@ -59,10 +59,19 @@ app.get('/veg_search', function(req, res){ //renders search by ingredients page 
      res.render('veg_search.hbs');
 });
 
+app.post('/write_review', function(req, resp) {
+  var title = req.body.title;
+  var content = req.body.content;
+  var rating = req.body.rating;
+  db.none(`insert into reviews ()`);
+});
+
 
 
 var market_info_array = [];
 var market_detail_results_array = [];
+
+var mergedUSDAArray = null;
 
 var coordinates;
 app.get('/search_results', function(req, res) {  //receives search parameter from search_page form
@@ -93,9 +102,9 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
           return getCoordsFromUsda(item.marketdetails.GoogleLink);
         });
 
-        var mergegUSDAArray = mergeUSDAArrays(market_info_array, market_detail_results_array);
+        mergedUSDAArray = mergeUSDAArrays(market_info_array, market_detail_results_array);
         res.render('search_results.hbs', {
-          USDAinfo: mergegUSDAArray,
+          USDAinfo: mergedUSDAArray,
           coordinates : coordinates
       });
       })
@@ -109,24 +118,16 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
      });
 });
 
-app.get('/market', function(req, resp, next) {
-  resp.render('market.hbs');
-  // let id = req.params.id;
-  // db.any(``)
-  //   .then(function(reviews) {
-  //     return [
-  //       reviews,
-  //       db.one(``)
-  //     ];
-  //   })
-  //   .spread(function(reviews, markets) {
-  //     resp.render('market.hbs', {
-  //       markets: markets,
-  //       reviews: reviews
-  //     });
-  //   })
-  //   .catch(next);
+app.get("/market_page/:id", function(req, resp) {
+  var marketID = req.params.id;
+  var result = singleMarketRequest(mergedUSDAArray, marketID);
+  // console.log("hi");
+  // console.log(result);
+  return resp.render('market_page.hbs', {
+    market_info: result
+    });
 });
+
 
 app.get('/signup', function(req, resp) {
   resp.render('signup.hbs');
@@ -150,10 +151,11 @@ app.post('/signup', function(req, res, next) {
     .catch(next);
 });
 
+var recipeSearchResults = [];
+var yummlyRecipeLinkInfo = [];
 app.get('/recipessearch', function(req, resp) {
   resp.render('recipessearch.hbs');
 });
-
 app.get('/recipes', function(req, resp) { //This is the Yummly API call function
     var ingredient1 = req.query.ingredient1;
     var ingredient2 = req.query.ingredient2;
@@ -165,13 +167,10 @@ app.get('/recipes', function(req, resp) { //This is the Yummly API call function
      url: "http://api.yummly.com/v1/api/recipes?_app_id=cf10df74&_app_key=46a91a122338f6df55213530c127f027&q=" + ingredient1 + "+" + ingredient2 + "+" + ingredient3 + "+" + ingredient4 + "+" + ingredient5
    })
    .then(function(response) {
-     var names = [];
      var parsed = JSON.parse(response.body);
-     for (i = 0; i <= 5; i++) {
-       names.push(parsed.matches[i].recipeName); //this part needs to be amended to push different values to the names array to then be rendered on the hbs page
-     }
+     recipeSearchResults = parsed;
      resp.render('recipes.hbs', {
-       recipes: names
+       recipes: parsed.matches,
    });
  })
  .catch(function (err) {
@@ -181,6 +180,52 @@ app.get('/recipes', function(req, resp) { //This is the Yummly API call function
  });
  });
 });
+function createRecipeObject(firstAPI, secondAPI) {
+  for (var i = 0; i < firstAPI.length; i++) {
+   recipeList = {};
+   newAPI.marketname = firstAPI[i].marketname;
+   newAPI.marketID = firstAPI[i].id;
+   newAPI.address = secondAPI[i].marketdetails.Address;
+   newAPI.googlelink = secondAPI[i].marketdetails.GoogleLink;
+   newAPI.products = secondAPI[i].marketdetails.Products;
+   newAPI.schedule = secondAPI[i].marketdetails.Schedule;
+   newAPI.mapMarkerLetter = labels[i];
+   arrayOfObj.push(newAPI);
+  }
+  return recipeList;
+}
+
+// app.get('/recipessearch', function(req, resp) {
+//   resp.render('recipessearch.hbs');
+// });
+//
+// app.get('/recipes', function(req, resp) { //This is the Yummly API call function
+//     var ingredient1 = req.query.ingredient1;
+//     var ingredient2 = req.query.ingredient2;
+//     var ingredient3 = req.query.ingredient3;
+//     var ingredient4 = req.query.ingredient4;
+//     var ingredient5 = req.query.ingredient5;
+//     return popsicle.request({
+//      method: 'GET',
+//      url: "http://api.yummly.com/v1/api/recipes?_app_id=cf10df74&_app_key=46a91a122338f6df55213530c127f027&q=" + ingredient1 + "+" + ingredient2 + "+" + ingredient3 + "+" + ingredient4 + "+" + ingredient5
+//    })
+//    .then(function(response) {
+//      var names = [];
+//      var parsed = JSON.parse(response.body);
+//      for (i = 0; i <= 5; i++) {
+//        names.push(parsed.matches[i].recipeName); //this part needs to be amended to push different values to the names array to then be rendered on the hbs page
+//      }
+//      resp.render('recipes.hbs', {
+//        recipes: names
+//    });
+//  })
+//  .catch(function (err) {
+//    console.log(err.message);
+//    resp.render('recipessearch.hbs', {
+//      error: "Sorry, we were unable to find any recipes that match your search criteria."
+//  });
+//  });
+// });
 
 // BEGIN HELPER FUNCTION DEFINITIONS --------------------------------
 function getResults(zip_search_input) {
@@ -238,8 +283,10 @@ function getCoordsFromUsda(string) {
   return cord;
 }
 
-function mergeUSDAArrays(firstAPI, secondAPI) {
+function mergeUSDAArrays(firstAPI, secondAPI) { //this merges the two arrays that are returned from the two USDA API Calls
   var arrayOfObj = [];
+  var labels = ['A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+  'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
   for (var i = 0; i < firstAPI.length; i++) {
    newAPI = {};
    newAPI.marketname = firstAPI[i].marketname;
@@ -248,9 +295,19 @@ function mergeUSDAArrays(firstAPI, secondAPI) {
    newAPI.googlelink = secondAPI[i].marketdetails.GoogleLink;
    newAPI.products = secondAPI[i].marketdetails.Products;
    newAPI.schedule = secondAPI[i].marketdetails.Schedule;
+   newAPI.mapMarkerLetter = labels[i];
    arrayOfObj.push(newAPI);
   }
   return arrayOfObj;
+}
+
+function singleMarketRequest(arrayOfObj, suppliedID) {
+  for (var i = 0; i < arrayOfObj.length; i++) {
+    console.log(arrayOfObj[i].marketID);
+    if (arrayOfObj[i].marketID === suppliedID) {
+      return arrayOfObj[i];
+    }
+  }
 }
 
 //EXPRESS LISTEN FUNCTION BELOW (MUST STAY AT THE BOTTOM OF THE FILE)
