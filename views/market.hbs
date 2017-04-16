@@ -1,0 +1,103 @@
+<div id="page" class="container-fluid">
+<div class="row">
+  <div id="header" class="col-xl-12">
+       <div class="col-xl-6" id="market_header">
+            <p id="left_text">Finding your favorite place to buy produce!</p>
+       </div>
+     </div>
+   </div>
+
+  <div class="row" id="market_details">
+   <div id="market_left" class="col-lg-8">
+      <img src="/market_stand.png" alt="">
+      <br>
+      <h2>Market Name</h2>
+      <h3>Address</h3>
+      <p>Ingredients List:</p>
+    </div>
+    <div id="market_right" class="col-lg-4">
+       <h2>Average Rating:</h2>
+       <img src="/star.png" width="45px" alt="">
+       <img src="/star.png" width="45px" alt="">
+       <img src="/star.png" width="45px" alt="">
+       <img src="/star.png" width="45px" alt="">
+       <img src="/star.png" width="45px" alt="">
+      </div>
+    </div>
+    <div class="row">
+      <div id="review_intro" class="col-xl-12">
+           <h1>Reviews</h1>
+           </div>
+         </div>
+
+
+         <div class="row" id="row_one">
+          <div id="review_one" class="col-lg-6">
+            <h2>Title</h2>
+            <img src="/star.png" width="35px" alt="">
+            <img src="/star.png" width="35px" alt="">
+            <img src="/star.png" width="35px" alt="">
+            <img src="/star.png" width="35px" alt="">
+            <img src="/star.png" width="35px" alt="">
+
+           </div>
+           <div id="review_two" class="col-lg-6">
+              <h2>Title</h2>
+              <img src="/star.png" width="35px" alt="">
+              <img src="/star.png" width="35px" alt="">
+              <img src="/star.png" width="35px" alt="">
+              <img src="/star.png" width="35px" alt="">
+              <img src="/star.png" width="35px" alt="">
+             </div>
+           </div>
+
+           <div class="row" id="row_two">
+            <div id="review_three" class="col-lg-6">
+              <h2>Title</h2>
+              <img src="/star.png" width="35px" alt="">
+              <img src="/star.png" width="35px" alt="">
+              <img src="/star.png" width="35px" alt="">
+              <img src="/star.png" width="35px" alt="">
+              <img src="/star.png" width="35px" alt="">
+             </div>
+             <div id="review_four" class="col-lg-6">
+                <h2>Title</h2>
+                <img src="/star.png" width="35px" alt="">
+                <img src="/star.png" width="35px" alt="">
+                <img src="/star.png" width="35px" alt="">
+                <img src="/star.png" width="35px" alt="">
+                <img src="/star.png" width="35px" alt="">
+               </div>
+             </div>
+
+   <div class="row">
+     <div id="write_review_intro" class="col-xl-12">
+          <h1>Write Your Own Review</h1>
+          </div>
+        </div>
+
+  <div class="row" id="write_review">
+    <div class="col-lg-12">
+{{#if session.loggedInUser}}
+   <form action="/write_review/{{market.id}}" method="POST">
+   <label><h3>Title: </h3></label><br>
+   <input type="text" name="title"><br>
+   <label><h3>Stars:</h3></label>
+   <select name="stars">
+     <option value="1">1</option>
+     <option value="2">2</option>
+     <option value="3">3</option>
+     <option value="4">4</option>
+     <option value="5">5</option>
+   </select><br>
+   <label><h3>Content:</h3></label><br>
+   <textarea name="review" cols="40" rows="6"></textarea><br>
+   <button type="submit">Submit</button>
+   </form>
+   {{else}}
+   <p>Please <a href="/signup">sign up</a> to write a review</p>
+   {{/if}}
+ </div>
+</div>
+
+</div>
