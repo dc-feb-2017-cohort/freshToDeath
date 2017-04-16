@@ -63,6 +63,12 @@ app.get('/', function(req, res){ //renders search/home page with search_page tem
      res.render('search_page.hbs');
 });
 
+app.get('/recipessearch', function(req, res){ //renders search by ingredients page on search
+     res.render('recipessearch.hbs');
+});
+
+
+
 var poop = {};
 var coordinates;
 app.get('/search_results', function(req, res) {  //receives search parameter from search_page form
@@ -98,7 +104,7 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
       // .then(function(coordinates) {
         //GOOGLE MAPS API CALL NEEDS TO HAPPEN HERE. DO WE HAVE TO USE SOCKET.IO???
         console.log(poop);
-        res.render('search_results.hbs', poop); 
+        res.render('search_results.hbs', poop);
             //  zip_search_results: usda_marketinfo_objects_array,
         //    details: details,
         //    coordinates: poop.coordinates,
