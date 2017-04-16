@@ -84,17 +84,19 @@ font-family: 'Yanone Kaffeesatz', sans-serif;
 p {
      font-size: 20px;
 }
-
+.bottomthing{
+     padding-bottom: 15px;
+}
 #left_content img {
      border-radius: 50%;
      padding-top: 30px;
      padding-bottom: 30px;
-     width: 60%
+     width: 50%
 
 }
 
 #right_content img {
-     width: 50%;
+     width: 46%;
      padding-bottom: 20px;
 }
 

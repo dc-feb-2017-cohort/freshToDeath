@@ -61,6 +61,9 @@ app.post('/submit_login', function(req, resp) {
 app.get('/', function(req, res){ //renders search/home page with search_page template when user requests it
      res.render('search_page.hbs');
 });
+app.get('/veg_search', function(req, res){ //renders search by ingredients page on search
+     res.render('veg_search.hbs');
+});
 
 
 var poop = {};
