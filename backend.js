@@ -35,19 +35,22 @@ app.get('/login', function(req, resp) {
 app.post('/submit_login', function(req, resp) {
   var username = req.body.username;
   var password = req.body.password;
-  db.one(`select password from shoppers where username =  $1`, [username])
+  db.one(`select password, id from shoppers where username =  $1`, [username])
   .then(function(result) {
-    return bcrypt.compare(password, result.password);
+    var id = result.id;
+    return [bcrypt.compare(password, result.password), id];
   })
-  .then(function(matched) {
+  .spread(function(matched, id) {
     if (matched) {
       req.session.loggedInUser = username;
+      req.session.id = id;
       resp.redirect('/');
     } else {
       resp.redirect('/');
     }
   })
     .catch(function(err) {
+      console.log(err.message);
       resp.redirect('/');
   });
 });
@@ -63,7 +66,16 @@ app.post('/write_review', function(req, resp) {
   var title = req.body.title;
   var content = req.body.content;
   var rating = req.body.rating;
-  db.none(`insert into reviews ()`);
+  var id = req.session.id;
+  var marketID = req.params.id;
+  var marketName = marketNameRequest(mergedUSDAArray);
+  db.none(`insert into markets (name, usda_id) values ($1, $2)` [marketName, marketID])
+  .then(function() {
+    return db.none(`insert into reviews (shopper_id, market_id, title, content, rating) values ($1, $2, $3, $4, $5)` [id, marketID, title, content, rating]);
+  })
+  .then(function() {
+    resp.redirect('/market_page/:id');
+  });
 });
 
 
@@ -195,37 +207,7 @@ function createRecipeObject(firstAPI, secondAPI) {
   return recipeList;
 }
 
-// app.get('/recipessearch', function(req, resp) {
-//   resp.render('recipessearch.hbs');
-// });
-//
-// app.get('/recipes', function(req, resp) { //This is the Yummly API call function
-//     var ingredient1 = req.query.ingredient1;
-//     var ingredient2 = req.query.ingredient2;
-//     var ingredient3 = req.query.ingredient3;
-//     var ingredient4 = req.query.ingredient4;
-//     var ingredient5 = req.query.ingredient5;
-//     return popsicle.request({
-//      method: 'GET',
-//      url: "http://api.yummly.com/v1/api/recipes?_app_id=cf10df74&_app_key=46a91a122338f6df55213530c127f027&q=" + ingredient1 + "+" + ingredient2 + "+" + ingredient3 + "+" + ingredient4 + "+" + ingredient5
-//    })
-//    .then(function(response) {
-//      var names = [];
-//      var parsed = JSON.parse(response.body);
-//      for (i = 0; i <= 5; i++) {
-//        names.push(parsed.matches[i].recipeName); //this part needs to be amended to push different values to the names array to then be rendered on the hbs page
-//      }
-//      resp.render('recipes.hbs', {
-//        recipes: names
-//    });
-//  })
-//  .catch(function (err) {
-//    console.log(err.message);
-//    resp.render('recipessearch.hbs', {
-//      error: "Sorry, we were unable to find any recipes that match your search criteria."
-//  });
-//  });
-// });
+
 
 // BEGIN HELPER FUNCTION DEFINITIONS --------------------------------
 function getResults(zip_search_input) {
@@ -306,6 +288,15 @@ function singleMarketRequest(arrayOfObj, suppliedID) {
     console.log(arrayOfObj[i].marketID);
     if (arrayOfObj[i].marketID === suppliedID) {
       return arrayOfObj[i];
+    }
+  }
+}
+
+function marketNameRequest(arrayOfObj, suppliedID) {
+  for (var i = 0; i < arrayOfObj.length; i++) {
+    console.log(arrayOfObj[i].marketID);
+    if (arrayOfObj[i].marketID === suppliedID) {
+      return arrayOfObj[i].marketname;
     }
   }
 }
