@@ -19,19 +19,14 @@ app.use(session({
     maxAge: 600000000
   }
 }));
-
 app.use(function(req, resp, next) {
   resp.locals.session = req.session;
   next();
 });
 //END MODULE IMPORTING/SETUP
-
 //BEGIN ROUTING FUNCTIONS
 app.get('/login', function(req, resp) {
-
 });
-
-
 app.post('/submit_login', function(req, resp) {
   var username = req.body.username;
   var password = req.body.password;
@@ -54,33 +49,28 @@ app.post('/submit_login', function(req, resp) {
       resp.redirect('/');
   });
 });
-
 app.get('/', function(req, res){ //renders search/home page with search_page template when user requests it
      res.render('search_page.hbs');
 });
 app.get('/veg_search', function(req, res){ //renders search by ingredients page on search
      res.render('veg_search.hbs');
 });
-
 var market_info_array = [];
 var market_detail_results_array = [];
 var marketID = null;
-
 var mergedUSDAArray = null;
-
+var market_info_results = null;
+var dbReviewResults = null;
 app.post('/write_review', function(req, resp) {
   var title = req.body.title;
   var content = req.body.content;
   var rating = parseInt(req.body.rating);
   var shopper_id = req.session.shopper_id;
   marketIDInt = parseInt(marketID);
-
-
   var marketName = marketNameRequest(mergedUSDAArray, marketID);
   console.log("Marketname:", marketName);
   db.any(`select id from markets where id = $1`,  [marketIDInt])
   .then(function(result) {
-       console.log(result);
        if (result.length < 1) {
             db.none(`insert into markets (name, id) values ($1, $2)` , [marketName, marketIDInt]);
             console.log("hi");
@@ -88,11 +78,11 @@ app.post('/write_review', function(req, resp) {
        return db.none(`insert into reviews (shopper_id, market_id, title, content, rating) values ($1, $2, $3, $4, $5)`, [shopper_id, marketIDInt, title, content, rating]);
  })
   .then(function() {
-    resp.redirect('/market_page/:' + marketIDInt);
+    marketIDInt = parseInt(marketID);
+    resp.redirect('/');
     marketID = null;
   });
 });
-
 var coordinates;
 app.get('/search_results', function(req, res) {  //receives search parameter from search_page form
      let zip_search_input = req.query.zipsearch; //assigns search query parameter to zip_search_input variable
@@ -121,7 +111,6 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
         coordinates = market_detail_results_array.map(function(item) { //maps over the market_body array and uses the getCoordsFromUsda helper function to return the latitude and longitude for each item and then insert them into individual objects, and finally assigns them to the array "coordinates"
           return getCoordsFromUsda(item.marketdetails.GoogleLink);
         });
-
         mergedUSDAArray = mergeUSDAArrays(market_info_array, market_detail_results_array);
         res.render('search_results.hbs', {
           USDAinfo: mergedUSDAArray,
@@ -131,24 +120,26 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
       .then(function() {
         market_info_array = [];
         market_detail_results_array = [];
-
       })
      .catch(function(err){
      console.log(err.message);
      });
 });
-
 app.get("/market_page/:id", function(req, resp) {
   marketID = req.params.id;
-  var result = singleMarketRequest(mergedUSDAArray, marketID);
-  // console.log("hi");
-  // console.log(result);
-  return resp.render('market_page.hbs', {
-    market_info: result
+  market_info_results = singleMarketRequest(mergedUSDAArray, marketID);
+  db.any(`select * from reviews where market_id = $1`, [marketID])
+  .then(function(reviews){
+    console.log(reviews);
+    resp.render('market_page.hbs', {
+    market_info: market_info_results, //global variable
+    market_reviews: reviews
+    });
+  })
+    .catch(function(err) {
+      console.log(err.message);
     });
 });
-
-
 app.get('/signup', function(req, resp) {
   resp.render('signup.hbs');
 });
@@ -156,7 +147,6 @@ app.get('/logout', function (req, res){
      req.session.loggedInUser = null;
      res.redirect('/');
 });
-
 app.post('/signup', function(req, res, next) {
  var info = req.body;
   bcrypt.hash(info.password, 10)
@@ -170,7 +160,6 @@ app.post('/signup', function(req, res, next) {
     })
     .catch(next);
 });
-
 var recipeSearchResults = [];
 var yummlyRecipeLinkInfo = [];
 app.get('/recipessearch', function(req, resp) {
@@ -214,9 +203,6 @@ function createRecipeObject(firstAPI, secondAPI) {
   }
   return recipeList;
 }
-
-
-
 // BEGIN HELPER FUNCTION DEFINITIONS --------------------------------
 function getResults(zip_search_input) {
    return popsicle.request({
@@ -224,7 +210,6 @@ function getResults(zip_search_input) {
      url: "http://search.ams.usda.gov/farmersmarkets/v1/data.svc/zipSearch?zip=" + zip_search_input,
    });
 }
-
 function zipSearchResultsHandler(searchresults) { //this function handles the JSON returned from USDA API and narrows it down to an array of marketnames
    return (new Promise (function(accept, reject) { //promisifies the function to be part of the promise chain above
         let market_info = [];
@@ -235,8 +220,6 @@ function zipSearchResultsHandler(searchresults) { //this function handles the JS
         accept(market_info);
    }));
 }
-
-
 function arrayOfIDAPICalls(marketInfoResults) {
   let arrayofAPIrequests = [];
   arrayofAPIrequests = marketInfoResults.map(function (object) {
@@ -249,7 +232,6 @@ function arrayOfIDAPICalls(marketInfoResults) {
     accept(arrayofAPIrequests);
   }));
 }
-
 function getCoordsFromUsda(string) {
   let lastChar;
   let cord = {};
@@ -272,7 +254,6 @@ function getCoordsFromUsda(string) {
   }
   return cord;
 }
-
 function mergeUSDAArrays(firstAPI, secondAPI) { //this merges the two arrays that are returned from the two USDA API Calls
   var arrayOfObj = [];
   var labels = ['A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -290,7 +271,6 @@ function mergeUSDAArrays(firstAPI, secondAPI) { //this merges the two arrays tha
   }
   return arrayOfObj;
 }
-
 function singleMarketRequest(arrayOfObj, suppliedID) {
   for (var i = 0; i < arrayOfObj.length; i++) {
     if (arrayOfObj[i].marketID === suppliedID) {
@@ -298,7 +278,6 @@ function singleMarketRequest(arrayOfObj, suppliedID) {
     }
   }
 }
-
 function marketNameRequest(arrayOfObj, suppliedID) {
   for (var i = 0; i < arrayOfObj.length; i++) {
     if (arrayOfObj[i].marketID === suppliedID) {
@@ -306,7 +285,6 @@ function marketNameRequest(arrayOfObj, suppliedID) {
     }
   }
 }
-
 //EXPRESS LISTEN FUNCTION BELOW (MUST STAY AT THE BOTTOM OF THE FILE)
 app.listen(3000, function() {
   console.log('Listening on port 3000.');
