@@ -43,7 +43,7 @@ app.post('/submit_login', function(req, resp) {
   .spread(function(matched, id) {
     if (matched) {
       req.session.loggedInUser = username;
-      req.session.id = id;
+      req.session.shopper_id = id;
       resp.redirect('/');
     } else {
       resp.redirect('/');
@@ -62,28 +62,36 @@ app.get('/veg_search', function(req, res){ //renders search by ingredients page 
      res.render('veg_search.hbs');
 });
 
+var market_info_array = [];
+var market_detail_results_array = [];
+var marketID = null;
+
+var mergedUSDAArray = null;
+
 app.post('/write_review', function(req, resp) {
   var title = req.body.title;
   var content = req.body.content;
-  var rating = req.body.rating;
-  var id = req.session.id;
-  var marketID = req.params.id;
-  var marketName = marketNameRequest(mergedUSDAArray);
-  db.none(`insert into markets (name, usda_id) values ($1, $2)` [marketName, marketID])
+  var rating = parseInt(req.body.rating);
+  var shopper_id = req.session.shopper_id;
+  marketIDInt = parseInt(marketID);
+
+
+  var marketName = marketNameRequest(mergedUSDAArray, marketID);
+  console.log("Marketname:", marketName);
+  db.any(`select id from markets where id = $1`,  [marketIDInt])
+  .then(function(result) {
+       console.log(result);
+       if (result.length < 1) {
+            db.none(`insert into markets (name, id) values ($1, $2)` , [marketName, marketIDInt]);
+            console.log("hi");
+       }
+       return db.none(`insert into reviews (shopper_id, market_id, title, content, rating) values ($1, $2, $3, $4, $5)`, [shopper_id, marketIDInt, title, content, rating]);
+ })
   .then(function() {
-    return db.none(`insert into reviews (shopper_id, market_id, title, content, rating) values ($1, $2, $3, $4, $5)` [id, marketID, title, content, rating]);
-  })
-  .then(function() {
-    resp.redirect('/market_page/:id');
+    resp.redirect('/market_page/:' + marketIDInt);
+    marketID = null;
   });
 });
-
-
-
-var market_info_array = [];
-var market_detail_results_array = [];
-
-var mergedUSDAArray = null;
 
 var coordinates;
 app.get('/search_results', function(req, res) {  //receives search parameter from search_page form
@@ -131,7 +139,7 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
 });
 
 app.get("/market_page/:id", function(req, resp) {
-  var marketID = req.params.id;
+  marketID = req.params.id;
   var result = singleMarketRequest(mergedUSDAArray, marketID);
   // console.log("hi");
   // console.log(result);
@@ -285,7 +293,6 @@ function mergeUSDAArrays(firstAPI, secondAPI) { //this merges the two arrays tha
 
 function singleMarketRequest(arrayOfObj, suppliedID) {
   for (var i = 0; i < arrayOfObj.length; i++) {
-    console.log(arrayOfObj[i].marketID);
     if (arrayOfObj[i].marketID === suppliedID) {
       return arrayOfObj[i];
     }
@@ -294,7 +301,6 @@ function singleMarketRequest(arrayOfObj, suppliedID) {
 
 function marketNameRequest(arrayOfObj, suppliedID) {
   for (var i = 0; i < arrayOfObj.length; i++) {
-    console.log(arrayOfObj[i].marketID);
     if (arrayOfObj[i].marketID === suppliedID) {
       return arrayOfObj[i].marketname;
     }
