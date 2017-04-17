@@ -1,17 +1,39 @@
 <!-- AARON"S EDITS -->
 <style media="screen">
   .main {
-    margin-left: 150px;
+    /*margin-left: 150px;*/
+    background-color: #B6E19C;
   }
   img {
     width: 150px;
   }
+  body {
+    background-color: #B6E19C
+
+  }
+  #recipe_results {
+    font-family: 'Pragati Narrow', sans-serif;
+    font-size: 25px;
+    text-align: center;
+    background-color: #B6E19C
+  }
+
+  #result_styling {
+    background-color: white;
+    width: 840px;
+    text-align: center;
+    border: 5px solid black;
+
+  }
 </style>
+
+<div id="recipe_results">
 <div class="main">
-  <h1>Your recipe search results</h1>
+  <br><h1>Your recipe search results</h1><br>
+  <div id="result_styling" class="container-fluid">
   {{#each recipes}}
   <br>
-  <h4>{{recipeName}} </h4><br>
+  <h1>{{recipeName}} </h1>
   Source: {{sourceDisplayName}}<br><br>
   <img src="{{smallImageUrls}}" alt="recipe photo"><br><br>
   Yummly Rating: {{rating}}<br>
@@ -19,5 +41,8 @@
   Course: {{attributes.course}}<br>
   Ingredients: {{ingredients}}
   <br>
+  <hr>
   {{/each}}
+  </div>
+</div>
 </div>

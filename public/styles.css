@@ -4,10 +4,10 @@
 }
 #intro{
   height: 100vh;
-  background-image: url("/23.jpg");
+  background-image: url("/main_image.png");
+  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: top;
   color: black;
 }
 
@@ -27,8 +27,9 @@
  padding-top: 5vh;
  text-align: center;
  color: black;
- font-size: 60px;
- font-family: 'Shrikhand', cursive;
+ font-size: 100px;
+ font-family: 'Pragati Narrow', sans-serif;
+ font-weight: bolder;
 }
 .scrollclass{
      text-align: center;
