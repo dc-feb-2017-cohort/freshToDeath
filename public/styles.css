@@ -117,35 +117,20 @@ font-size: 35px;
 
 /*MARKET PAGE STYLES*/
 
-#market_stand {
-  position: relative;
-  text-align: center;
-  height: auto;
+#market_details{
+     text-align: left;
+     padding-top: 25px;
+     background-color: white;
+}
+#market_details_jumbo {
+     background-color: rgb(80, 83, 87);
+     color: white;
 
 }
 
-#market_left {
-  position: relative;
-  text-align: center;
-  height: auto;
-}
-
-#market_right {
-  padding-top: 50px;
-  text-align: center;
-  position: relative;
-  height: auto;
-}
-
-#market_details {
-  text-align: center;
-  font-family: 'Pragati Narrow', sans-serif;
-  height: auto;
-  /*border-bottom: 1px solid black;*/
-}
 
 #reviews {
-  text-align: center;
+  text-align: justify;
   font-family: 'Pragati Narrow', sans-serif;
 
 }
@@ -160,21 +145,21 @@ font-size: 35px;
   /*margin-right: 10px;*/
 }
 
-#write_review input {
-  width: 670px;
+
+#write_review_jumbo{
+     text-align: left;
+     background-color: white;
+     margin-left: 0px;
+     padding-left: 0px;
+}
+#write_review_label{
+     padding-left: 30px;
+}
+.write_review_title{
+     width: 200px;
 }
 
 
-
-#write_review_intro {
-  text-align: center;
-  font-family: 'Pragati Narrow', sans-serif;
-  height: 60px;
-  border-bottom: 1px solid black;
-}
-#write_review {
-  text-align: center;
-}
 
 
 /*SIGN UP STYLES!!!!!!!!!SIGN UP STYLES!!!!!!!!*/
