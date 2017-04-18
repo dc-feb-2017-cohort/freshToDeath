@@ -11,9 +11,9 @@
           <!-- BODY TAG BELOW RECEIVES HTML FROM ALL HBS TEMPLATES AND RENDERS IT TO THE PAGE -->
           {{#if session.loggedInUser}}
           <form class="logbutton" action="/logout">
-    <input type="submit" value="Logout" />
-    <p class="logstatus">Logged in as: {{session.loggedInUser}}</p>
-</form>
+            <input type="submit" value="Logout" />
+            <p class="logstatus">Logged in as: {{session.loggedInUser}}</p>
+          </form>
 <!-- <a href="/logout">Logout</a> -->
           {{else}}
           <div class="col-xl-6" id="righthead">
@@ -22,7 +22,7 @@
                   <input type="password" name="password" placeholder="Password">
                   <button type="submit">Login</button>
               </form>
-         </div>
+          </div>
           {{/if}}
           {{{body}}}
 

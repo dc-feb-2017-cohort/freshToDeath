@@ -28,13 +28,22 @@ app.use(function(req, resp, next) {
 });
 //END MODULE IMPORTING/SETUP
 
-//BEGIN ROUTING FUNCTIONS
-app.get('/login', function(req, resp) {
+//GLOBAL VARIABLES
+var market_info_array = [];
+var market_detail_results_array = [];
+var marketID = null;
+var mergedUSDAArray = null;
+var market_info_results = null;
+var dbReviewResults = null;
+var coordinates;
+//END GLOBAL VARIABLES
 
+//BEGIN ROUTING FUNCTIONS
+app.get('/', function(req, res){ //renders root/home page with home_page template
+     res.render('home_page.hbs'); //this is the home page template (includes zip search bar)
 });
 
-
-app.post('/submit_login', function(req, resp) {
+app.post('/submit_login', function(req, resp) { //
   var username = req.body.username;
   var password = req.body.password;
   db.one(`select password, id from shoppers where username =  $1`, [username])
@@ -56,21 +65,6 @@ app.post('/submit_login', function(req, resp) {
       resp.redirect('/');
   });
 });
-
-app.get('/', function(req, res){ //renders search/home page with search_page template when user requests it
-     res.render('search_page.hbs');
-});
-app.get('/veg_search', function(req, res){ //renders search by ingredients page on search
-     res.render('veg_search.hbs');
-});
-
-var market_info_array = [];
-var market_detail_results_array = [];
-var marketID = null;
-var mergedUSDAArray = null;
-var market_info_results = null;
-var dbReviewResults = null;
-
 
 app.post('/write_review', function(req, resp) {
   var title = req.body.title;
@@ -95,8 +89,7 @@ app.post('/write_review', function(req, resp) {
   });
 });
 
-var coordinates;
-app.get('/search_results', function(req, res) {  //receives search parameter from search_page form
+app.get('/search_results', function(req, res) {  //receives search parameter from home_page form
      let zip_search_input = req.query.zipsearch; //assigns search query parameter to zip_search_input variable
      return getResults(zip_search_input)
      .then(function (res) {
