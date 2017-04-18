@@ -11,6 +11,7 @@
   color: black;
 }
 
+
 #intro img {
   /*opacity: 0.6;*/
 }
@@ -58,7 +59,7 @@
 #righthead{
      float: right;
      padding-top: 2vh;
-     padding-right: 1vh;
+     padding-right: 15px;
 }
 
 #header {
