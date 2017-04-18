@@ -52,12 +52,12 @@
 
 <script type="text/javascript">
   var locations = [];
-  {{#each coordinates}}
+  {{#each marketCoordinates}}
     locations.push([{{this.lat}}, {{this.lng}}]);
   {{/each}}
   var center = {
-    lat: {{coordinates.0.lat}},
-    lng: {{coordinates.0.lng}}
+    lat: {{marketCoordinates.0.lat}},
+    lng: {{marketCoordinates.0.lng}}
   };
 </script>
 <script src="googlemapsscript.js"></script>
