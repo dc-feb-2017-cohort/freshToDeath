@@ -77,7 +77,7 @@ app.get('/search_results', function(req, res) {  //receives zip search argument 
   })
   .then(function(arrayOfRequestPackages){
     return Promise.map(arrayOfRequestPackages, function(eachPackage){ //we use the bluebird.map method here to map over each item in the array and make an independent API call for each one of them
-      return popsicle.request(eachPackage);//SECOND USDA API call; makes a series of calls with each market id included in the package
+      return popsicle.request(eachPackage);//SECOND USDA API call; makes a series of calls with each market id included in the package (these are promises themselves)
     });
   })
   .then(function(marketDetailObject) { //returns an array of market details objects (with address, schedule, Google map link, and products sold) in JSON format
