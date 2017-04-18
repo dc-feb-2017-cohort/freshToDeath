@@ -65,8 +65,10 @@ app.get('/veg_search', function(req, res){ //renders search by ingredients page 
 var market_info_array = [];
 var market_detail_results_array = [];
 var marketID = null;
-
 var mergedUSDAArray = null;
+var market_info_results = null;
+var dbReviewResults = null;
+
 
 app.post('/write_review', function(req, resp) {
   var title = req.body.title;
@@ -74,13 +76,10 @@ app.post('/write_review', function(req, resp) {
   var rating = parseInt(req.body.rating);
   var shopper_id = req.session.shopper_id;
   marketIDInt = parseInt(marketID);
-
-
   var marketName = marketNameRequest(mergedUSDAArray, marketID);
   console.log("Marketname:", marketName);
   db.any(`select id from markets where id = $1`,  [marketIDInt])
   .then(function(result) {
-       console.log(result);
        if (result.length < 1) {
             db.none(`insert into markets (name, id) values ($1, $2)` , [marketName, marketIDInt]);
             console.log("hi");
@@ -88,7 +87,8 @@ app.post('/write_review', function(req, resp) {
        return db.none(`insert into reviews (shopper_id, market_id, title, content, rating) values ($1, $2, $3, $4, $5)`, [shopper_id, marketIDInt, title, content, rating]);
  })
   .then(function() {
-    resp.redirect('/market_page/:' + marketIDInt);
+    marketIDInt = parseInt(marketID);
+    resp.redirect('/');
     marketID = null;
   });
 });
@@ -140,14 +140,21 @@ app.get('/search_results', function(req, res) {  //receives search parameter fro
 
 app.get("/market_page/:id", function(req, resp) {
   marketID = req.params.id;
-  var result = singleMarketRequest(mergedUSDAArray, marketID);
-  // console.log("hi");
-  // console.log(result);
-  return resp.render('market_page.hbs', {
-    market_info: result
+  market_info_results = singleMarketRequest(mergedUSDAArray, marketID);
+  db.any(`select * from reviews where market_id = $1`, [marketID])
+  .then(function(reviews){
+    console.log(reviews);
+    resp.render('market_page.hbs', {
+    market_info: market_info_results, //global variable
+    market_reviews: reviews
     });
-});
+  })
+    .catch(function(err) {
 
+      console.log(err.message);
+    });
+
+});
 
 app.get('/signup', function(req, resp) {
   resp.render('signup.hbs');
