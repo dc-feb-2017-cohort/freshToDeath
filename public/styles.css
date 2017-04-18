@@ -1,6 +1,6 @@
 #loginid{
      float: right;
-     padding-bottom: 7px;
+     margin-bottom: 5%;
 }
 #intro{
   height: 100vh;
@@ -126,6 +126,7 @@ font-size: 35px;
 #market_details_jumbo {
      background-color: rgb(80, 83, 87);
      color: white;
+     margin-top: 1%;
 
 }
 
