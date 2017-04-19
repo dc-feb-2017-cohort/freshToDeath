@@ -28,15 +28,17 @@ app.use(function(req, res, next) {
 });
 //END MODULE IMPORTING/SETUP
 
-//GLOBAL VARIABLES
+//GLOBAL VARIABLE DEFINITIONS
 var globalMarketNameIDArray;
-var market_detail_results_array = [];
-var marketID = null;
-var mergedUSDAArray = null;
-var market_info_results = null;
+var marketDetailArray;
+var mergedUSDAArray;
+var marketCoordinates;
+var marketID;
+var selectedMarketInformation;
 var dbReviewResults = null;
-var coordinates;
-//END GLOBAL VARIABLES
+var recipeSearchResults = [];
+var yummlyRecipeLinkInfo = [];
+//END GLOBAL VARIABLE DEFINITIONS
 
 //BEGIN ROUTING FUNCTIONS
 app.get('/', function(req, res){ //renders root/home page with home_page template
@@ -81,35 +83,31 @@ app.get('/search_results', function(req, res) {  //receives zip search argument 
     });
   })
   .then(function(marketDetailObject) { //returns an array of market details objects (with address, schedule, Google map link, and products sold) in JSON format
-    market_detail_results_array = marketDetailObject.map(function(item){ //maps over the objects in the market details array, parsing the JSON objects (specifically the "body" values), and assigning them to a market_body variable (which is an array)
+    marketDetailArray = marketDetailObject.map(function(item){ //maps over the objects in the market details array, parsing the JSON objects (specifically the "body" values), and assigning them to the marketDetailArray
       return JSON.parse(item.body);
     });
-    coordinates = market_detail_results_array.map(function(item) { //maps over the market_body array and uses the getCoordsFromUsda helper function to return the latitude and longitude for each item and then insert them into individual objects, and finally assigns them to the array "coordinates"
+    marketCoordinates = marketDetailArray.map(function(item) { //maps over the marketDetailArray and uses the getCoordsFromUsda helper function to return the latitude and longitude for each item and then insert them into individual objects, and finally assigns them to the array "marketCoordinates", which is global; (see helper function section below for more on getCoordsFromUsda function)
       return getCoordsFromUsda(item.marketdetails.GoogleLink);
     });
-    mergedUSDAArray = mergeUSDAArrays(globalMarketNameIDArray, market_detail_results_array);
+    mergedUSDAArray = mergeUSDAArrays(globalMarketNameIDArray, marketDetailArray); //zip the two arrays which are the results of the two separate API calls into a one dimensional array of objects for rendering to the search_results page (see helper functions below)
     res.render('search_results.hbs', {
-      USDAinfo: mergedUSDAArray,
-      coordinates : coordinates
+      USDAinfo: mergedUSDAArray, //renders the market names and details to the search_results page
+      marketCoordinates : marketCoordinates //pass the coordinates to the search_results page to be used in the Google Maps API call
     });
-  })
-  .then(function() {
-    globalMarketNameIDArray = [];
-    market_detail_results_array = [];
   })
   .catch(function(err){
     console.log(err.message);
   });
 });
 
-app.get("/market_page/:id", function(req, res) {
-  marketID = req.params.id;
-  market_info_results = singleMarketRequest(mergedUSDAArray, marketID);
-  db.any(`select * from reviews where market_id = $1`, [marketID])
+app.get("/market_page/:id", function(req, res) { //this get request refers to the search_results page
+  marketID = req.params.id; //pulls the marketID from the search_results page based on the market specific button the uses clicks on
+  selectedMarketInformation = findMarketInGlobalArray(mergedUSDAArray, marketID); //see helper functions below
+  db.any(`select * from reviews where market_id = $1`, [marketID]) //does a db query for reviews linked this unique market
   .then(function(reviews){
     res.render('market_page.hbs', {
-    market_info: market_info_results, //global variable
-    market_reviews: reviews
+    market_info: selectedMarketInformation, //renders page with market info
+    market_reviews: reviews //if there are reviews, the page will include those reviews from the db
     });
   })
   .catch(function(err) {
@@ -160,8 +158,6 @@ app.post('/signup', function(req, res, next) {
     .catch(next);
 });
 
-var recipeSearchResults = [];
-var yummlyRecipeLinkInfo = [];
 app.get('/recipessearch', function(req, res) {
   res.render('recipessearch.hbs');
 });
@@ -221,7 +217,8 @@ function arrayOfIDAPICalls(marketNameIDArray) { //returns an array of requests t
   }));
 }
 
-function getCoordsFromUsda(string) {
+function getCoordsFromUsda(string) { //takes in the GoogleLink from the objects in the marketDetailArray and pulls out the lat and long values
+  //this is what the link from the object looks like: http://maps.google.com/?q=33.7788269%2C%20-84.2974842%20(%22Decatur+Farmers+Market+%22)
   var lastChar;
   var cord = {};
   for (var i = 26; i < string.length; i++) {
@@ -241,13 +238,13 @@ function getCoordsFromUsda(string) {
       break;
     }
   }
-  return cord;
+  return cord; //returns an object of lat and long key:value pairs for each market detail object
 }
 
 function mergeUSDAArrays(firstAPI, secondAPI) { //this merges the two arrays that are returned from the two USDA API Calls
   var arrayOfObj = [];
   var labels = ['A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-  'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+  'T', 'U', 'V', 'W', 'X', 'Y', 'Z']; //this assigns each market entry a label that corresponds to the Google map
   for (var i = 0; i < firstAPI.length; i++) {
    newAPI = {};
    newAPI.marketname = firstAPI[i].marketname;
@@ -277,7 +274,7 @@ function createRecipeObject(firstAPI, secondAPI) {
   return recipeList;
 }
 
-function singleMarketRequest(arrayOfObj, suppliedID) {
+function findMarketInGlobalArray(arrayOfObj, suppliedID) { //pass in the global mergedUSDAArray and marketID to return the market name and details for the user-selected market
   for (var i = 0; i < arrayOfObj.length; i++) {
     if (arrayOfObj[i].marketID === suppliedID) {
       return arrayOfObj[i];
