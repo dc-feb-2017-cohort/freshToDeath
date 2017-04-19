@@ -161,6 +161,7 @@ app.post('/signup', function(req, res, next) {
 app.get('/recipessearch', function(req, res) {
   res.render('recipessearch.hbs');
 });
+
 app.get('/recipes', function(req, res) { //This is the Yummly API call function
     var ingredient1 = req.query.ingredient1;
     var ingredient2 = req.query.ingredient2;
@@ -171,8 +172,8 @@ app.get('/recipes', function(req, res) { //This is the Yummly API call function
      method: 'GET',
      url: "http://api.yummly.com/v1/api/recipes?_app_id=cf10df74&_app_key=46a91a122338f6df55213530c127f027&q=" + ingredient1 + "+" + ingredient2 + "+" + ingredient3 + "+" + ingredient4 + "+" + ingredient5
    })
-   .then(function(res) {
-     var parsed = JSON.parse(res.body);
+   .then(function(results) {
+     var parsed = JSON.parse(results.body);
      recipeSearchResults = parsed;
      res.render('recipes.hbs', {
        recipes: parsed.matches,
