@@ -67,6 +67,11 @@ app.post('/submit_login', function(req, res) { //the login form from the layout.
   });
 });
 
+app.get('/logout', function (req, res){
+     req.session.loggedInUser = null;
+     res.redirect('/');
+});
+
 app.get('/search_results', function(req, res) {  //receives zip search argument from search_results form on home_page.hbs
  var zipSearchInput = req.query.zipsearch; //assigns zip search input from the form to zipSearchInput variable
   getResults(zipSearchInput) //helper function (see helper functions section below) (FIRST USDA API call)
@@ -115,7 +120,7 @@ app.get("/market_page/:id", function(req, res) { //this get request refers to th
   });
 });
 
-app.post('/write_review', function(req, res) {
+app.post('/write_review', function(req, res) { //COMMENTS NEEDED HERE
   var title = req.body.title;
   var content = req.body.content;
   var rating = parseInt(req.body.rating);
@@ -124,11 +129,11 @@ app.post('/write_review', function(req, res) {
   var marketName = marketNameRequest(mergedUSDAArray, marketID);
   db.any(`select id from markets where id = $1`,  [marketIDInt])
   .then(function(result) {
-       if (result.length < 1) {
-            db.none(`insert into markets (name, id) values ($1, $2)` , [marketName, marketIDInt]);
-       }
-       return db.none(`insert into reviews (shopper_id, market_id, title, content, rating) values ($1, $2, $3, $4, $5)`, [shopper_id, marketIDInt, title, content, rating]);
- })
+   if (result.length < 1) {
+        db.none(`insert into markets (name, id) values ($1, $2)` , [marketName, marketIDInt]);
+   }
+   return db.none(`insert into reviews (shopper_id, market_id, title, content, rating) values ($1, $2, $3, $4, $5)`, [shopper_id, marketIDInt, title, content, rating]);
+  })
   .then(function() {
     marketIDInt = parseInt(marketID);
     res.redirect('/');
@@ -136,54 +141,50 @@ app.post('/write_review', function(req, res) {
   });
 });
 
-app.get('/signup', function(req, res) {
+app.get('/signup', function(req, res) { //renders the signup.hbs page when the user is routed to the sign up url (linked to from the home page)
   res.render('signup.hbs');
 });
-app.get('/logout', function (req, res){
-     req.session.loggedInUser = null;
-     res.redirect('/');
-});
 
-app.post('/signup', function(req, res, next) {
- var info = req.body;
-  bcrypt.hash(info.password, 10)
+app.post('/signup', function(req, res, next) { //use post so user's info is not included in the url
+ var info = req.body; //grabs info user entered from body of form (including password, email, and username)
+  bcrypt.hash(info.password, 10) //encrypts password
     .then(function(encryptedPassword) {
-      return db.none(`insert into shoppers values (default, $1, $2, $3)`,
+      return db.none(`insert into shoppers values (default, $1, $2, $3)`, //inserts account info into db
       [info.username, info.email, encryptedPassword]);
     })
     .then(function() {
-      req.session.loggedInUser = info.username;
-      res.redirect('/');
+      req.session.loggedInUser = info.username; //upon sign up, user becomes session loggedInUser
+      res.redirect('/'); //redirected to home page
     })
     .catch(next);
 });
 
-app.get('/recipessearch', function(req, res) {
+app.get('/recipessearch', function(req, res) { //renders the recipessearch.hbs page when the user is routed to the recipe search url (linked to from the home page)
   res.render('recipessearch.hbs');
 });
 
-app.get('/recipes', function(req, res) { //This is the Yummly API call function
-    var ingredient1 = req.query.ingredient1;
+app.get('/recipes', function(req, res) {
+    var ingredient1 = req.query.ingredient1; //grabs this info from the recipe search page
     var ingredient2 = req.query.ingredient2;
     var ingredient3 = req.query.ingredient3;
     var ingredient4 = req.query.ingredient4;
     var ingredient5 = req.query.ingredient5;
-    return popsicle.request({
+    return popsicle.request({ //makes call to Yummly API
      method: 'GET',
      url: "http://api.yummly.com/v1/api/recipes?_app_id=cf10df74&_app_key=46a91a122338f6df55213530c127f027&q=" + ingredient1 + "+" + ingredient2 + "+" + ingredient3 + "+" + ingredient4 + "+" + ingredient5
    })
-   .then(function(results) {
+   .then(function(results) { //results include JSON object with all of the matching recipes included
      var parsed = JSON.parse(results.body);
-     recipeSearchResults = parsed;
+     recipeSearchResults = parsed; //global variable that will be used for second call to Yummly API (in progress by Aaron)
      res.render('recipes.hbs', {
-       recipes: parsed.matches,
+       recipes: parsed.matches, //renders recipe results to recipes.hbs page
    });
- })
- .catch(function (err) {
-   console.log(err.message);
-   res.render('recipessearch.hbs', {
-     error: "Sorry, we were unable to find any recipes that match your search criteria."
- });
+   })
+   .catch(function (err) {
+     console.log(err.message);
+     res.render('recipessearch.hbs', {
+       error: "Sorry, we were unable to find any recipes that match your search criteria."
+   });
  });
 });
 
