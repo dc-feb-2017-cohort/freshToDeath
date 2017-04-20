@@ -1,23 +1,52 @@
 <!-- STEVEN'S EDITS -->
 <style media="screen">
-  .main {
-    text-align: center;
-    margin-top: 150px;
-    background-color: #B6E19C;
+
+  body {
+    background-image: url('/cutting_board.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
   }
 
-  * {
-    background-color: #B6E19C;
+  #main h1 {
+    font-size: 50px;
+    color: white;
+
+  }
+
+
+  #main h2 {
+    color: white;
+    font-weight: bolder;
   }
 
   #recipe_search_page {
-    font-family: 'Pragati Narrow', sans-serif;
     font-size: 25px;
-    background-color: #B6E19C
+    font-family: 'Pragati Narrow', sans-serif;
+    text-align: center;
+    /*margin-top: 150px;*/
+  }
+
+  #main {
+    /*margin-top: 150px;*/
   }
 
   input {
     background-color: white;
+
+  }
+
+  .search_form > input {
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+
+  #main button {
+    background-color: green;
+    border: none;
+    border-radius: 0;
+    font-size: 25px;
   }
 
 
@@ -25,18 +54,23 @@
 
 <!-- <br> -->
 {{error}}
-<div id="recipe_search_page" class="container-fluid">
-<div class="main">
-<h1>Search for Recipes Below by Entering in Items You Purchased at Your Local Market</h1>
+<!-- <div id="recipe_search_page" class="container-fluid">
+<div class="row">
+<div id="main" class="col-xl-12"> -->
+<div id="recipe_search_page">
+<div id="main"><br><br><br><br>
+<h1>Did you Get Fresh?</h1>
+<h2>Search for Recipes to Get Cooking!</h2>
 <form action="/recipes" class="search_form" method="GET">
-  <br><br>
+  <br>
     <input type="text" name="ingredient1" placeholder="search by ingredient" rows:>
     <input type="text" name="ingredient2" placeholder="search by ingredient" rows:>
     <input type="text" name="ingredient3" placeholder="search by ingredient" rows:>
     <input type="text" name="ingredient4" placeholder="search by ingredient" rows:>
-    <input type="text" name="ingredient5" placeholder="search by ingredient" rows:>
-    <button type="submit">Go</button>
+    <input type="text" name="ingredient5" placeholder="search by ingredient" rows:><br><br>
+    <button type="submit" class="bt btn-primary btn-lg">Search For Recipes</button>
 </form><br><br>
-
 </div>
 </div>
+<!-- </div>
+</div> -->
