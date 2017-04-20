@@ -45,7 +45,7 @@ app.get('/', function(req, res){ //renders root/home page with home_page templat
      res.render('home_page.hbs'); //this is the home page template (includes zip search bar)
 });
 
-app.post('/submit_login', function(req, res) { //the login form from the layout.hbs file redirects here
+app.post('/', function(req, res) { //the login form from the layout.hbs file redirects here
   var username = req.body.username; //pulls username submitted by user in the form on the layout.hbs page
   var password = req.body.password; //pulls password from the same form
   db.one(`select password, id from shoppers where username =  $1`, [username]) //db query that returns password and shopper id associated with the entered username

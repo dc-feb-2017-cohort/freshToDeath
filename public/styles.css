@@ -29,7 +29,7 @@
 #intro h1 {
  padding-top: 5vh;
  text-align: center;
- color: black;
+ color: white;
  font-size: 60px;
  font-family: 'Pragati Narrow', cursive;
 }
@@ -40,10 +40,12 @@
 }
 
 #intro h5 {
+  margin-top: 10vh;
+  margin-bottom: 10vh;
   text-align: center;
   font-family: 'Pragati Narrow', sans-serif;
   font-size: 30px;
-  color: black;
+  color: white;
 }
 
 #intro a {
@@ -84,6 +86,8 @@ font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
 .cool {
+  /*margin-top: 10vh;*/
+  float: right;
   text-align: center;
 }
 
@@ -190,4 +194,20 @@ font-size: 35px;
 .logbutton{
      float: right;
      padding: 10px;
+}
+
+#loginid button, #righthead button {
+  background-color: rgb(125, 78, 15);
+  border: none;
+  border-radius: 0;
+  font-size: 12px;
+  margin: 0 15px 0 15px;
+}
+
+.home_page_error_message {
+  float: right;
+  color: red;
+  margin: 25px 10px 0 0;
+  font-weight: bold;
+
 }
