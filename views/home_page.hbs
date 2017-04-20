@@ -4,26 +4,26 @@
          <div class="col-xl-6" id="lefthead">
             <p id="left_text">GetFresh!</p>
          </div>
+         <div class="home_page_error_message">
+           {{error}}
+         </div>
       </div>
-    </div>
-    <div class="home_page_error_message">
-      {{error}}
     </div>
     <div class="row">
      <div class="col-lg-12" id="intro">
-      <h1>Finding your favorite place to buy produce!</h1><br>
+      <h1>Finding your favorite place to buy produce!</h1>
       <h5>Enter your zip code to find farmers markets near you:</h5>
       <form action="/search_results" id="search_form" method="GET">
         <input type="text" name="zipsearch" placeholder="search by zipcode" rows:>
         <button type="submit">Go</button>
       </form>
-     <div class="cool"><h5>For more features, sign up <a href="signup">here</a></h5></div>
-       <div class="scrollclass">
+     <!-- <div class="cool"><h5>For more features, sign up <a href="signup">here</a></h5></div> -->
+       <!-- <div class="scrollclass">
         <img src="/scroll2.png" alt="">
-       </div>
+       </div> -->
      </div>
     </div>
-        <div class="row" id="content">
+        <!-- <div class="row" id="content">
              <div class="col-lg-4" id="left_content">
                   <h3>Search By Ingredients</h3>
                   <a href="/recipessearch"><img id="leftleftimg" src="/veg2.jpg" alt=""></a>
@@ -46,5 +46,5 @@
 
 
              </div>
-  </div>
+  </div> -->
 </div>
