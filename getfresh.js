@@ -58,7 +58,7 @@ app.post('/submit_login', function(req, res) { //the login form from the layout.
       req.session.loggedInUser = username;
       req.session.shopper_id = id;
     }
-    res.redirect('/');
+    res.redirect('back'); //this redirects the user to the current page upon sign in
   })
   .catch(function(err) {
     res.render('home_page.hbs', {
@@ -136,7 +136,7 @@ app.post('/write_review', function(req, res) { //COMMENTS NEEDED HERE
   })
   .then(function() {
     marketIDInt = parseInt(marketID);
-    res.redirect('/');
+    res.redirect('back');
     marketID = null;
   });
 });
