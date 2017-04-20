@@ -31,7 +31,7 @@
  text-align: center;
  color: black;
  font-size: 60px;
- font-family: 'Shrikhand', cursive;
+ font-family: 'Pragati Narrow', cursive;
 }
 .scrollclass{
      text-align: center;
@@ -71,7 +71,8 @@
 #left_text{
      padding-top: 10px;
      font-family: 'Yanone Kaffeesatz', sans-serif;
-     font-size: 1.8em;
+     font-size: 2.8em;
+     letter-spacing: 5px;
      color: rgb(125, 78, 15);
 }
 p {
