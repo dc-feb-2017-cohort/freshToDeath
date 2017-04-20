@@ -60,7 +60,7 @@ app.post('/', function(req, res) { //the login form from the layout.hbs file red
     }
     res.redirect('back'); //this redirects the user to the current page upon sign in
   })
-  .catch(function(err) {
+  .catch(function(error) {
     res.render('home_page.hbs', {
       error: 'Incorrect Password or Username' //bcrypt will throw an error if the passwords don't match and this will be rendered to the home page
     });
@@ -147,6 +147,11 @@ app.get('/signup', function(req, res) { //renders the signup.hbs page when the u
 
 app.post('/signup', function(req, res, next) { //use post so user's info is not included in the url
  var info = req.body; //grabs info user entered from body of form (including password, email, and username)
+ if (info.username === '' || info.password === '' || info.email === '') {
+   res.render('signup.hbs', {
+     error : "Incomplete account information. Please try again."
+   });
+ } else {
   bcrypt.hash(info.password, 10) //encrypts password
     .then(function(encryptedPassword) {
       return db.none(`insert into shoppers values (default, $1, $2, $3)`, //inserts account info into db
@@ -157,6 +162,7 @@ app.post('/signup', function(req, res, next) { //use post so user's info is not 
       res.redirect('/'); //redirected to home page
     })
     .catch(next);
+  }
 });
 
 app.get('/recipessearch', function(req, res) { //renders the recipessearch.hbs page when the user is routed to the recipe search url (linked to from the home page)
