@@ -5,8 +5,8 @@
      margin-bottom: 5%;
 }
 #intro{
-  height: 100vh;
-  background-image: url("/23.jpg");
+  height: 90vh;
+  background-image: url("/background1.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;
@@ -14,24 +14,67 @@
 }
 
 
-#intro img {
-  /*opacity: 0.6;*/
-}
 #search_form{
      text-align: center;
+     margin-top: -20px;
 }
+
+#search_form button {
+  background-color: green;
+  border: none;
+  border-radius: 0;
+  font-size: 20px;
+  margin: 0 15px 5px 15px;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  letter-spacing: 2px;
+}
+
+#search_form button:hover {
+  background-color: darkgreen;
+}
+
 #search_form > input {
-     width: 250px;
-     height: 30px;
+     width: 350px;
+     height: 43px;
      text-align: left;
+     font-size: 20px;
+     padding-left: 10px;
+     margin-bottom: 50px;
+}
+
+.market_button button {
+  background-color: green;
+  border: none;
+  border-radius: 0;
+  font-size: 20px;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  letter-spacing: 2px;
+}
+
+.market_button button:hover {
+  background-color: darkgreen;
+}
+
+.recipes_search_form > input {
+  width: 200px;
+  height: 43px;
+  text-align: left;
+  font-size: 15px;
+  padding-left: 10px;
+}
+
+#page a, #header a {
+  text-decoration: none;
 }
 
 #intro h1 {
- padding-top: 5vh;
+  margin-top: 55px;
  text-align: center;
- color: black;
- font-size: 60px;
- font-family: 'Shrikhand', cursive;
+ color: white;
+ font-size: 40px;
+ letter-spacing: 5px;
+ font-family: 'Yanone Kaffeesatz', sans-serif;
+ font-weight: bolder;
 }
 .scrollclass{
      text-align: center;
@@ -40,10 +83,13 @@
 }
 
 #intro h5 {
+  margin-top: 10vh;
+  margin-bottom: 10vh;
   text-align: center;
-  font-family: 'Pragati Narrow', sans-serif;
-  font-size: 30px;
-  color: black;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-size: 25px;
+  letter-spacing: 5px;
+  color: white;
 }
 
 #intro a {
@@ -67,13 +113,32 @@
 #header {
   width: 100%;
   text-align: left;
+  height: 5vh;
 }
+
 #left_text{
      padding-top: 10px;
      font-family: 'Yanone Kaffeesatz', sans-serif;
-     font-size: 1.8em;
-     color: rgb(125, 78, 15);
+     font-size: 2.8em;
+     letter-spacing: 5px;
+     color: green;
 }
+
+#main span {
+  padding-top: 10px;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  /*letter-spacing: 5px;*/
+  color: green;
+}
+
+.main_page_logo {
+  padding-top: 10px;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-size: 2.8em;
+  letter-spacing: 5px;
+  color: green;
+}
+
 p {
 font-family: 'Yanone Kaffeesatz', sans-serif;
 }
@@ -83,6 +148,8 @@ font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
 .cool {
+  /*margin-top: 10vh;*/
+  float: right;
   text-align: center;
 }
 
@@ -126,10 +193,12 @@ font-size: 35px;
      background-color: white;
 }
 #market_details_jumbo {
-     background-color: rgb(80, 83, 87);
+     background-color: #D5834F;
      color: white;
      margin-top: 1%;
-
+}
+.market_text{
+     margin-left: 5%;
 }
 
 
@@ -163,9 +232,6 @@ font-size: 35px;
      width: 200px;
 }
 
-
-
-
 /*SIGN UP STYLES!!!!!!!!!SIGN UP STYLES!!!!!!!!*/
 #sign_up {
      padding-left: 5vh;
@@ -173,7 +239,6 @@ font-size: 35px;
 }
 .signel{
      height: 30px;
-     width: 200px;
      text-align: center;
      margin: 5px;
 }
@@ -186,5 +251,72 @@ font-size: 35px;
 }
 .logbutton{
      float: right;
-     padding: 10px;
+     /*padding: 10px;*/
+     margin: 17px 10px 0 0;
+}
+
+.logbutton button {
+  background-color: rgb(125, 78, 15);
+  border: none;
+  border-radius: 0;
+  font-size: 12px;
+  margin: 0 0 0 15px;
+}
+
+#loginid button, #righthead button, #sign_up button {
+  background-color: rgb(125, 78, 15);
+  border: none;
+  border-radius: 0;
+  font-size: 12px;
+  margin: 0 0 0 15px;
+}
+
+#loginid button:hover, #righthead button:hover, #sign_up button:hover {
+  background-color: #E5A738;
+}
+
+#loginid input {
+  height: 32px;
+}
+
+.mapmarketletter {
+  background-color: #F76056;
+  display: inline-block;
+  border-radius: 100px;
+  padding: 15px 20px 15px 20px;
+}
+
+.home_page_error_message {
+  float: right;
+  color: red;
+  margin: 25px 10px 0 0;
+  font-weight: bold;
+}
+
+.zip_error_message {
+  color: darkred;
+  text-align: center;
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.sign_up_page_error_message {
+  color: red;
+  text-align: center;
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+hr {
+  width: 50%;
+}
+#intro > div.col-lg-12 > h5 > a {
+  color: white;
+  background-color: orange;
+  padding: 10px;
+}
+#intro > div.col-lg-12 > h5 > a:hover {
+  background-color: darkorange;
 }

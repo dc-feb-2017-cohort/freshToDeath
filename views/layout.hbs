@@ -12,15 +12,16 @@
           <!-- BODY TAG BELOW RECEIVES HTML FROM ALL HBS TEMPLATES AND RENDERS IT TO THE PAGE -->
           {{#if session.loggedInUser}}
             <form class="logbutton" action="/logout">
-              <input type="submit" value="Logout" />
+              <button type="submit" class="btn btn-primary btn-lg">Logout</button>
               <p class="logstatus">Logged in as: {{session.loggedInUser}}</p>
             </form>
           {{else}}
           <div class="col-xl-6" id="righthead">
-             <form action="submit_login" id="loginid" method="POST">
+            <a href="/signup"><button type="button" class="cool btn btn-primary btn-lg">Sign Up</button></a>
+             <form action="/" id="loginid" method="POST">
                 <input type="text" name="username" placeholder="Username">
                 <input type="password" name="password" placeholder="Password">
-                <button type="submit">Login</button>
+                <button type="submit" class="btn btn-primary btn-lg">Login</button>
              </form>
           </div>
           {{/if}}

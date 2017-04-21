@@ -1,7 +1,14 @@
 
 <div id="page" class="container-fluid">
 
-
+  <div id="header" class="col-xl-12">
+     <div class="col-xl-6" id="lefthead">
+        <a href="/"><p id="left_text">GetFresh!</p></a>
+     </div>
+     <div class="home_page_error_message">
+       {{error}}
+     </div>
+  </div>
   <div class="row" id="market_details">
       <br>
       <div class="jumbotron" id="market_details_jumbo">
@@ -17,12 +24,13 @@
   <div class="row">
     <div id="reviews" class="col-lg-8"><br>
          {{#each market_reviews}}
-           <h4><div>
-             <h3>{{title}}</h3>
-             <h4>{{content}}</h4>
-             Rating: {{rating}}<br>
+           <div>
+
+             <h3 class="market_text">{{title}}</h3>
+             <h4 class="market_text">{{content}}</h4>
+             <h3 class="market_text">Rating: {{rating}}</h3><br>
              <br><br>
-           </div></h4>
+           </div>
          {{/each}}
          </div>
   </div>

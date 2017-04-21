@@ -28,22 +28,24 @@ app.use(function(req, res, next) {
 });
 //END MODULE IMPORTING/SETUP
 
-//GLOBAL VARIABLES
+//GLOBAL VARIABLE DEFINITIONS
 var globalMarketNameIDArray;
-var market_detail_results_array = [];
-var marketID = null;
-var mergedUSDAArray = null;
-var market_info_results = null;
+var marketDetailArray;
+var mergedUSDAArray;
+var marketCoordinates;
+var marketID;
+var selectedMarketInformation;
 var dbReviewResults = null;
-var coordinates;
-//END GLOBAL VARIABLES
+var recipeSearchResults = [];
+var yummlyRecipeLinkInfo = [];
+//END GLOBAL VARIABLE DEFINITIONS
 
 //BEGIN ROUTING FUNCTIONS
 app.get('/', function(req, res){ //renders root/home page with home_page template
      res.render('home_page.hbs'); //this is the home page template (includes zip search bar)
 });
 
-app.post('/submit_login', function(req, res) { //the login form from the layout.hbs file redirects here
+app.post('/', function(req, res) { //the login form from the layout.hbs file redirects here
   var username = req.body.username; //pulls username submitted by user in the form on the layout.hbs page
   var password = req.body.password; //pulls password from the same form
   db.one(`select password, id from shoppers where username =  $1`, [username]) //db query that returns password and shopper id associated with the entered username
@@ -56,13 +58,18 @@ app.post('/submit_login', function(req, res) { //the login form from the layout.
       req.session.loggedInUser = username;
       req.session.shopper_id = id;
     }
-    res.redirect('/');
+    res.redirect('back'); //this redirects the user to the current page upon sign in
   })
-  .catch(function(err) {
+  .catch(function(error) {
     res.render('home_page.hbs', {
-      error: 'Incorrect Password or Username' //bcrypt will throw an error if the passwords don't match and this will be rendered to the home page
+      error: 'Incorrect Username or Password.' //bcrypt will throw an error if the passwords don't match and this will be rendered to the home page
     });
   });
+});
+
+app.get('/logout', function (req, res){
+     req.session.loggedInUser = null;
+     res.redirect('/');
 });
 
 app.get('/search_results', function(req, res) {  //receives zip search argument from search_results form on home_page.hbs
@@ -77,39 +84,38 @@ app.get('/search_results', function(req, res) {  //receives zip search argument 
   })
   .then(function(arrayOfRequestPackages){
     return Promise.map(arrayOfRequestPackages, function(eachPackage){ //we use the bluebird.map method here to map over each item in the array and make an independent API call for each one of them
-      return popsicle.request(eachPackage);//SECOND USDA API call; makes a series of calls with each market id included in the package
+      return popsicle.request(eachPackage);//SECOND USDA API call; makes a series of calls with each market id included in the package (these are promises themselves)
     });
   })
   .then(function(marketDetailObject) { //returns an array of market details objects (with address, schedule, Google map link, and products sold) in JSON format
-    market_detail_results_array = marketDetailObject.map(function(item){ //maps over the objects in the market details array, parsing the JSON objects (specifically the "body" values), and assigning them to a market_body variable (which is an array)
+    marketDetailArray = marketDetailObject.map(function(item){ //maps over the objects in the market details array, parsing the JSON objects (specifically the "body" values), and assigning them to the marketDetailArray
       return JSON.parse(item.body);
     });
-    coordinates = market_detail_results_array.map(function(item) { //maps over the market_body array and uses the getCoordsFromUsda helper function to return the latitude and longitude for each item and then insert them into individual objects, and finally assigns them to the array "coordinates"
+    marketCoordinates = marketDetailArray.map(function(item) { //maps over the marketDetailArray and uses the getCoordsFromUsda helper function to return the latitude and longitude for each item and then insert them into individual objects, and finally assigns them to the array "marketCoordinates", which is global; (see helper function section below for more on getCoordsFromUsda function)
       return getCoordsFromUsda(item.marketdetails.GoogleLink);
     });
-    mergedUSDAArray = mergeUSDAArrays(globalMarketNameIDArray, market_detail_results_array);
+    mergedUSDAArray = mergeUSDAArrays(globalMarketNameIDArray, marketDetailArray); //zip the two arrays which are the results of the two separate API calls into a one dimensional array of objects for rendering to the search_results page (see helper functions below)
     res.render('search_results.hbs', {
-      USDAinfo: mergedUSDAArray,
-      coordinates : coordinates
+      USDAinfo: mergedUSDAArray, //renders the market names and details to the search_results page
+      marketCoordinates : marketCoordinates //pass the coordinates to the search_results page to be used in the Google Maps API call
     });
-  })
-  .then(function() {
-    globalMarketNameIDArray = [];
-    market_detail_results_array = [];
   })
   .catch(function(err){
     console.log(err.message);
+    res.render('home_page.hbs', {
+      error_zip: "Sorry, we were unable to find any recipes that match your search criteria. Please try your search again."
+    });
   });
 });
 
-app.get("/market_page/:id", function(req, res) {
-  marketID = req.params.id;
-  market_info_results = singleMarketRequest(mergedUSDAArray, marketID);
-  db.any(`select * from reviews where market_id = $1`, [marketID])
+app.get("/market_page/:id", function(req, res) { //this get request refers to the search_results page
+  marketID = req.params.id; //pulls the marketID from the search_results page based on the market specific button the uses clicks on
+  selectedMarketInformation = findMarketInGlobalArray(mergedUSDAArray, marketID); //see helper functions below
+  db.any(`select * from reviews where market_id = $1`, [marketID]) //does a db query for reviews linked this unique market
   .then(function(reviews){
     res.render('market_page.hbs', {
-    market_info: market_info_results, //global variable
-    market_reviews: reviews
+    market_info: selectedMarketInformation, //renders page with market info
+    market_reviews: reviews //if there are reviews, the page will include those reviews from the db
     });
   })
   .catch(function(err) {
@@ -117,7 +123,7 @@ app.get("/market_page/:id", function(req, res) {
   });
 });
 
-app.post('/write_review', function(req, res) {
+app.post('/write_review', function(req, res) { //COMMENTS NEEDED HERE
   var title = req.body.title;
   var content = req.body.content;
   var rating = parseInt(req.body.rating);
@@ -126,67 +132,68 @@ app.post('/write_review', function(req, res) {
   var marketName = marketNameRequest(mergedUSDAArray, marketID);
   db.any(`select id from markets where id = $1`,  [marketIDInt])
   .then(function(result) {
-       if (result.length < 1) {
-            db.none(`insert into markets (name, id) values ($1, $2)` , [marketName, marketIDInt]);
-       }
-       return db.none(`insert into reviews (shopper_id, market_id, title, content, rating) values ($1, $2, $3, $4, $5)`, [shopper_id, marketIDInt, title, content, rating]);
- })
+   if (result.length < 1) {
+        db.none(`insert into markets (name, id) values ($1, $2)` , [marketName, marketIDInt]);
+   }
+   return db.none(`insert into reviews (shopper_id, market_id, title, content, rating) values ($1, $2, $3, $4, $5)`, [shopper_id, marketIDInt, title, content, rating]);
+  })
   .then(function() {
     marketIDInt = parseInt(marketID);
-    res.redirect('/');
+    res.redirect('back');
     marketID = null;
   });
 });
 
-app.get('/signup', function(req, res) {
+app.get('/signup', function(req, res) { //renders the signup.hbs page when the user is routed to the sign up url (linked to from the home page)
   res.render('signup.hbs');
 });
-app.get('/logout', function (req, res){
-     req.session.loggedInUser = null;
-     res.redirect('/');
-});
 
-app.post('/signup', function(req, res, next) {
- var info = req.body;
-  bcrypt.hash(info.password, 10)
+app.post('/signup', function(req, res, next) { //use post so user's info is not included in the url
+ var info = req.body; //grabs info user entered from body of form (including password, email, and username)
+ if (info.username === '' || info.password === '' || info.email === '') {
+   res.render('signup.hbs', {
+     error : "Incomplete account information. Please try again."
+   });
+ } else {
+  bcrypt.hash(info.password, 10) //encrypts password
     .then(function(encryptedPassword) {
-      return db.none(`insert into shoppers values (default, $1, $2, $3)`,
+      return db.none(`insert into shoppers values (default, $1, $2, $3)`, //inserts account info into db
       [info.username, info.email, encryptedPassword]);
     })
     .then(function() {
-      req.session.loggedInUser = info.username;
-      res.redirect('/');
+      req.session.loggedInUser = info.username; //upon sign up, user becomes session loggedInUser
+      res.redirect('/'); //redirected to home page
     })
     .catch(next);
+  }
 });
 
-var recipeSearchResults = [];
-var yummlyRecipeLinkInfo = [];
-app.get('/recipessearch', function(req, res) {
+app.get('/recipessearch', function(req, res) { //renders the recipessearch.hbs page when the user is routed to the recipe search url (linked to from the home page)
   res.render('recipessearch.hbs');
 });
-app.get('/recipes', function(req, res) { //This is the Yummly API call function
-    var ingredient1 = req.query.ingredient1;
+
+app.get('/recipes', function(req, res) {
+    var ingredient1 = req.query.ingredient1; //grabs this info from the recipe search page
     var ingredient2 = req.query.ingredient2;
     var ingredient3 = req.query.ingredient3;
     var ingredient4 = req.query.ingredient4;
     var ingredient5 = req.query.ingredient5;
-    return popsicle.request({
+    return popsicle.request({ //makes call to Yummly API
      method: 'GET',
      url: "http://api.yummly.com/v1/api/recipes?_app_id=cf10df74&_app_key=46a91a122338f6df55213530c127f027&q=" + ingredient1 + "+" + ingredient2 + "+" + ingredient3 + "+" + ingredient4 + "+" + ingredient5
    })
-   .then(function(res) {
-     var parsed = JSON.parse(res.body);
-     recipeSearchResults = parsed;
+   .then(function(results) { //results include JSON object with all of the matching recipes included
+     var parsed = JSON.parse(results.body);
+     recipeSearchResults = parsed; //global variable that will be used for second call to Yummly API (in progress by Aaron)
      res.render('recipes.hbs', {
-       recipes: parsed.matches,
+       recipes: parsed.matches, //renders recipe results to recipes.hbs page
    });
- })
- .catch(function (err) {
-   console.log(err.message);
-   res.render('recipessearch.hbs', {
-     error: "Sorry, we were unable to find any recipes that match your search criteria."
- });
+   })
+   .catch(function (err) {
+     console.log(err.message);
+     res.render('recipessearch.hbs', {
+       error: "Sorry, we were unable to find any recipes that match your search criteria."
+   });
  });
 });
 
@@ -221,7 +228,8 @@ function arrayOfIDAPICalls(marketNameIDArray) { //returns an array of requests t
   }));
 }
 
-function getCoordsFromUsda(string) {
+function getCoordsFromUsda(string) { //takes in the GoogleLink from the objects in the marketDetailArray and pulls out the lat and long values
+  //this is what the link from the object looks like: http://maps.google.com/?q=33.7788269%2C%20-84.2974842%20(%22Decatur+Farmers+Market+%22)
   var lastChar;
   var cord = {};
   for (var i = 26; i < string.length; i++) {
@@ -241,13 +249,13 @@ function getCoordsFromUsda(string) {
       break;
     }
   }
-  return cord;
+  return cord; //returns an object of lat and long key:value pairs for each market detail object
 }
 
 function mergeUSDAArrays(firstAPI, secondAPI) { //this merges the two arrays that are returned from the two USDA API Calls
   var arrayOfObj = [];
   var labels = ['A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-  'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+  'T', 'U', 'V', 'W', 'X', 'Y', 'Z']; //this assigns each market entry a label that corresponds to the Google map
   for (var i = 0; i < firstAPI.length; i++) {
    newAPI = {};
    newAPI.marketname = firstAPI[i].marketname;
@@ -277,7 +285,7 @@ function createRecipeObject(firstAPI, secondAPI) {
   return recipeList;
 }
 
-function singleMarketRequest(arrayOfObj, suppliedID) {
+function findMarketInGlobalArray(arrayOfObj, suppliedID) { //pass in the global mergedUSDAArray and marketID to return the market name and details for the user-selected market
   for (var i = 0; i < arrayOfObj.length; i++) {
     if (arrayOfObj[i].marketID === suppliedID) {
       return arrayOfObj[i];
