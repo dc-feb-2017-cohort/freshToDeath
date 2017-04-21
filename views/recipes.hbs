@@ -10,20 +10,17 @@
     padding-left: 30px;
     position: relative;
     display: inline;
-
   }
   body {
     background-color: rgb(80, 83, 87);
-
-
   }
-
   #recipe_header {
     padding-left: 5%;
     padding-right: 5%;
     color: white;
     background-color: rgb(80, 83, 87);
   }
+  
   #recipe_results {
     font-family: 'Pragati Narrow', sans-serif;
     font-size: 25px;
@@ -48,6 +45,14 @@
   }
 </style>
 
+<div id="header" class="col-xl-12">
+   <div class="col-xl-6" id="lefthead">
+      <a href="/"><p id="left_text">GetFresh!</p></a>
+   </div>
+   <div class="home_page_error_message">
+     {{error}}
+   </div>
+</div>
 <div id="recipe_results">
 <div class="main">
   <div id="recipe_header"><br><h1>Your recipe search results</h1><br></div>
