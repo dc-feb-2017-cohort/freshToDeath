@@ -31,7 +31,7 @@
   /* Optional: Makes the sample page fill the window. */
   html, body {
     height: 100%;
-    margin: 0;
+    margin: 0 10px 0 10px;
     padding: 0;
   }
 </style>
@@ -56,7 +56,7 @@
   {{schedule}}
   <br><br>
   <form class="market_button" action="/market_page/{{marketID}}">
-    <input type="submit" value="MARKET PAGE"/>
+    <button type="submit" class="btn btn-primary btn-lg">MARKET PAGE</button>
   </form>
   <hr>
 {{/each}}

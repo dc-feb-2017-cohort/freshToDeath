@@ -5,7 +5,7 @@
      margin-bottom: 5%;
 }
 #intro{
-  height: 95vh;
+  height: 90vh;
   background-image: url("/background1.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -29,12 +29,29 @@
   letter-spacing: 2px;
 }
 
+#search_form button:hover {
+  background-color: darkgreen;
+}
+
 #search_form > input {
      width: 350px;
      height: 43px;
      text-align: left;
      font-size: 20px;
      padding-left: 10px;
+}
+
+.market_button button {
+  background-color: green;
+  border: none;
+  border-radius: 0;
+  font-size: 20px;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  letter-spacing: 2px;
+}
+
+.market_button button:hover {
+  background-color: darkgreen;
 }
 
 .recipes_search_form > input {
@@ -50,13 +67,12 @@
 }
 
 #intro h1 {
-  margin-top: 100px;
- padding-top: 5vh;
+  margin-top: 50px;
  text-align: center;
  color: white;
  font-size: 60px;
  letter-spacing: 5px;
- font-family: 'Pragati Narrow', cursive;
+ font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 .scrollclass{
      text-align: center;
@@ -68,7 +84,7 @@
   margin-top: 10vh;
   margin-bottom: 10vh;
   text-align: center;
-  font-family: 'Pragati Narrow', sans-serif;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
   font-size: 30px;
   letter-spacing: 5px;
   color: white;
@@ -175,7 +191,7 @@ font-size: 35px;
      background-color: white;
 }
 #market_details_jumbo {
-     background-color: rgb(80, 83, 87);
+     background-color: #D5834F;
      color: white;
      margin-top: 1%;
 }
@@ -251,6 +267,10 @@ font-size: 35px;
   border-radius: 0;
   font-size: 12px;
   margin: 0 0 0 15px;
+}
+
+#loginid button:hover, #righthead button:hover, #sign_up button:hover {
+  background-color: #E5A738;
 }
 
 #loginid input {
