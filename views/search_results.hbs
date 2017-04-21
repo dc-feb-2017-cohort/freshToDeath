@@ -12,7 +12,7 @@
     border-right: 5px solid #505357;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    
+
 
     /*margin: 10px 190px 10px 190px;*/
   }
@@ -41,7 +41,7 @@
 <!-- TAG BELOW RECEIVES RESULTS FROM THE APP.GET CALL ON THE BACKEND.JS FILE WHICH IS CALLING THE USDA API  -->
 <div id="style_results">
   {{#each USDAinfo}}<br>
-  <h3>{{mapMarkerLetter}}: {{marketname}}</h3>
+  <h3><div class="mapmarketletter">{{mapMarkerLetter}}</div> {{marketname}}</h3>
   <h4>{{address}}
   <a href="{{googlelink}}" target="_blank">Get directions</a></h4><br>
   Products Offered:<br>{{products}}<br><br>
@@ -52,7 +52,6 @@
     <input type="submit" value="MARKET PAGE"/>
   </form>
   <hr>
-
 {{/each}}
 </div>
 

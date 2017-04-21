@@ -5,7 +5,7 @@
      margin-bottom: 5%;
 }
 #intro{
-  height: 100vh;
+  height: 95vh;
   background-image: url("/background1.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -17,13 +17,29 @@
 #intro img {
   /*opacity: 0.6;*/
 }
+
 #search_form{
      text-align: center;
 }
+
+#search_form button {
+  background-color: green;
+  border: none;
+  border-radius: 0;
+  font-size: 18px;
+  margin: 0 15px 5px 15px;
+}
+
 #search_form > input {
-     width: 250px;
-     height: 30px;
+     width: 350px;
+     height: 43px;
      text-align: left;
+     font-size: 20px;
+     padding-left: 10px;
+}
+
+#page a {
+  text-decoration: none;
 }
 
 #intro h1 {
@@ -69,6 +85,7 @@
 #header {
   width: 100%;
   text-align: left;
+  height: 5vh;
 }
 #left_text{
      padding-top: 10px;
@@ -204,9 +221,27 @@ font-size: 35px;
   margin: 0 15px 0 15px;
 }
 
+#loginid input {
+  height: 32px;
+}
+
+.mapmarketletter {
+  background-color: #F76056;
+  display: inline-block;
+  border-radius: 100px;
+  padding: 15px 20px 15px 20px;
+}
+
 .home_page_error_message {
   float: right;
   color: red;
   margin: 25px 10px 0 0;
   font-weight: bold;
+}
+
+.zip_error_message {
+  color: red;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 20px;
 }
