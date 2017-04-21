@@ -10,7 +10,7 @@
   }
 
   #main h1 {
-    font-size: 50px;
+    font-size: 65px;
     color: white;
 
   }
@@ -28,10 +28,7 @@
     font-size: 25px;
     font-family: 'Pragati Narrow', sans-serif;
     text-align: center;
-    /*margin-top: 150px;*/
-  }
-
-  #main {
+    letter-spacing: 3px;
     /*margin-top: 150px;*/
   }
 
@@ -50,6 +47,7 @@
     border: none;
     border-radius: 0;
     font-size: 25px;
+    letter-spacing: 2px;
   }
 
 
@@ -64,9 +62,9 @@
 </div>
 <div id="recipe_search_page">
 <div id="main"><br><br><br><br>
-<h1>Did you Get Fresh?</h1>
+  <h1>Did you <span>GetFresh?</span></h1>
 <h2>Search for Recipes to Get Cooking!</h2>
-<form action="/recipes" class="search_form" method="GET">
+<form action="/recipes" class="recipes_search_form" method="GET">
   <br>
     <input type="text" name="ingredient1" placeholder="search by ingredient" rows:>
     <input type="text" name="ingredient2" placeholder="search by ingredient" rows:>
