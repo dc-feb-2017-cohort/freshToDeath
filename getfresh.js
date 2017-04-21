@@ -102,6 +102,9 @@ app.get('/search_results', function(req, res) {  //receives zip search argument 
   })
   .catch(function(err){
     console.log(err.message);
+    res.render('home_page.hbs', {
+      error_zip: "Sorry, we were unable to find any recipes that match your search criteria. Please try your search again."
+    });
   });
 });
 

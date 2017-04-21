@@ -2,7 +2,7 @@
     <div class="row">
       <div id="header" class="col-xl-12">
          <div class="col-xl-6" id="lefthead">
-            <p id="left_text">GetFresh!</p>
+            <a href="/"><p id="left_text">GetFresh!</p></a>
          </div>
          <div class="home_page_error_message">
            {{error}}
@@ -15,8 +15,11 @@
       <h5>Enter your zip code to find farmers markets near you:</h5>
       <form action="/search_results" id="search_form" method="GET">
         <input type="text" name="zipsearch" placeholder="search by zipcode" rows:>
-        <button type="submit">Go</button>
+        <button type="submit" class="btn btn-primary btn-lg">Get Fresh!</button>
       </form>
+      <div class="zip_error_message">
+        {{error_zip}}
+      </div>
      <!-- <div class="cool"><h5>For more features, sign up <a href="signup">here</a></h5></div> -->
        <!-- <div class="scrollclass">
         <img src="/scroll2.png" alt="">
