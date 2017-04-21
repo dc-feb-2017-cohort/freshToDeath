@@ -62,7 +62,7 @@ app.post('/', function(req, res) { //the login form from the layout.hbs file red
   })
   .catch(function(error) {
     res.render('home_page.hbs', {
-      error: 'Incorrect Password or Username' //bcrypt will throw an error if the passwords don't match and this will be rendered to the home page
+      error: 'Incorrect Username or Password.' //bcrypt will throw an error if the passwords don't match and this will be rendered to the home page
     });
   });
 });

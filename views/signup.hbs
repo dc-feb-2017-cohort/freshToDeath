@@ -11,20 +11,17 @@
        height: 100vh;
      }
      #signtitle{
+     font-family: 'Yanone Kaffeesatz', sans-serif;
       padding-bottom: 20px;
       margin-top: 350px;
       color: white;
-      font-size: 50px;
+      font-size: 75px;
      }
 
      #righthead{
           display: none;
      }
 </style>
-
-<div class="home_page_error_message">
-  {{error}}
-</div>
 <div class="container" id="singupall">
      <h3 id="signtitle">Sign Up</h3>
      <form action="signup" id="sign_up" method="POST">
@@ -33,4 +30,7 @@
        <input class="signel" type="password" name="password" placeholder="Password">
        <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
      </form>
+     <div class="sign_up_page_error_message">
+       {{error}}
+     </div>
 </div>
