@@ -14,20 +14,19 @@
 }
 
 
-#intro img {
-  /*opacity: 0.6;*/
-}
-
 #search_form{
      text-align: center;
+     margin-top: -20px;
 }
 
 #search_form button {
   background-color: green;
   border: none;
   border-radius: 0;
-  font-size: 18px;
+  font-size: 20px;
   margin: 0 15px 5px 15px;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  letter-spacing: 2px;
 }
 
 #search_form > input {
@@ -38,15 +37,25 @@
      padding-left: 10px;
 }
 
+.recipes_search_form > input {
+  width: 200px;
+  height: 43px;
+  text-align: left;
+  font-size: 15px;
+  padding-left: 10px;
+}
+
 #page a, #header a {
   text-decoration: none;
 }
 
 #intro h1 {
+  margin-top: 100px;
  padding-top: 5vh;
  text-align: center;
  color: white;
  font-size: 60px;
+ letter-spacing: 5px;
  font-family: 'Pragati Narrow', cursive;
 }
 .scrollclass{
@@ -61,6 +70,7 @@
   text-align: center;
   font-family: 'Pragati Narrow', sans-serif;
   font-size: 30px;
+  letter-spacing: 5px;
   color: white;
 }
 
@@ -95,6 +105,22 @@
      letter-spacing: 5px;
      color: green;
 }
+
+#main span {
+  padding-top: 10px;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  /*letter-spacing: 5px;*/
+  color: green;
+}
+
+.main_page_logo {
+  padding-top: 10px;
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-size: 2.8em;
+  letter-spacing: 5px;
+  color: green;
+}
+
 p {
 font-family: 'Yanone Kaffeesatz', sans-serif;
 }
@@ -188,9 +214,6 @@ font-size: 35px;
      width: 200px;
 }
 
-
-
-
 /*SIGN UP STYLES!!!!!!!!!SIGN UP STYLES!!!!!!!!*/
 #sign_up {
      padding-left: 5vh;
@@ -210,7 +233,16 @@ font-size: 35px;
 }
 .logbutton{
      float: right;
-     padding: 10px;
+     /*padding: 10px;*/
+     margin: 17px 10px 0 0;
+}
+
+.logbutton button {
+  background-color: rgb(125, 78, 15);
+  border: none;
+  border-radius: 0;
+  font-size: 12px;
+  margin: 0 0 0 15px;
 }
 
 #loginid button, #righthead button, #sign_up button {
@@ -243,5 +275,5 @@ font-size: 35px;
   color: red;
   text-align: center;
   font-weight: bold;
-  margin-top: 20px;
+  margin-top: 10px;
 }
