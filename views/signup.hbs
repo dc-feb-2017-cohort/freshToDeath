@@ -2,13 +2,21 @@
      * {
           text-align: center;
      }
+
+     body {
+       background-image: url('/goth.jpg');
+       background-repeat: no-repeat;
+       background-size: cover;
+       background-position: center;
+       height: 100vh;
+     }
      #signtitle{
-          padding-bottom: 20px;
+      padding-bottom: 20px;
+      margin-top: 350px;
+      color: white;
+      font-size: 50px;
      }
-     #goth{
-     margin-left: -30px;
-     padding-top: 20px;
-     }
+
      #righthead{
           display: none;
      }
@@ -23,7 +31,6 @@
        <input class="signel" type="text" name="username" placeholder="Username">
        <input class="signel" type="text" name="email" placeholder="Email address">
        <input class="signel" type="password" name="password" placeholder="Password">
-       <button type="submit">Sign Up</button>
+       <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
      </form>
-     <img src="/goth.jpg" id="goth" alt="">
 </div>

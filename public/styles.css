@@ -38,7 +38,7 @@
      padding-left: 10px;
 }
 
-#page a {
+#page a, #header a {
   text-decoration: none;
 }
 
@@ -87,12 +87,13 @@
   text-align: left;
   height: 5vh;
 }
+
 #left_text{
      padding-top: 10px;
      font-family: 'Yanone Kaffeesatz', sans-serif;
      font-size: 2.8em;
      letter-spacing: 5px;
-     color: rgb(125, 78, 15);
+     color: green;
 }
 p {
 font-family: 'Yanone Kaffeesatz', sans-serif;
@@ -197,7 +198,6 @@ font-size: 35px;
 }
 .signel{
      height: 30px;
-     width: 200px;
      text-align: center;
      margin: 5px;
 }
@@ -213,12 +213,12 @@ font-size: 35px;
      padding: 10px;
 }
 
-#loginid button, #righthead button {
+#loginid button, #righthead button, #sign_up button {
   background-color: rgb(125, 78, 15);
   border: none;
   border-radius: 0;
   font-size: 12px;
-  margin: 0 15px 0 15px;
+  margin: 0 0 0 15px;
 }
 
 #loginid input {
