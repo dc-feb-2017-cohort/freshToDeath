@@ -316,6 +316,7 @@ hr {
   color: white;
   background-color: orange;
   padding: 10px;
+  opacity: .8;
 }
 #intro > div.col-lg-12 > h5 > a:hover {
   background-color: darkorange;
