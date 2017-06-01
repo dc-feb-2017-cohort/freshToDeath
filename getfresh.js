@@ -21,7 +21,7 @@ app.use(session({
     maxAge: 600000000
   }
 }));
-
+// hey
 app.use(function(req, res, next) {
   res.locals.session = req.session;
   next();
