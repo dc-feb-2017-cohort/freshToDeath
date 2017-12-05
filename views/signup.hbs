@@ -1,0 +1,36 @@
+<style>
+     * {
+          text-align: center;
+     }
+
+     body {
+       background-image: url('/goth.jpg');
+       background-repeat: no-repeat;
+       background-size: cover;
+       background-position: center;
+       height: 100vh;
+     }
+     #signtitle{
+     font-family: 'Yanone Kaffeesatz', sans-serif;
+      padding-bottom: 20px;
+      margin-top: 350px;
+      color: white;
+      font-size: 75px;
+     }
+
+     #righthead{
+          display: none;
+     }
+</style>
+<div class="container" id="singupall">
+     <h3 id="signtitle">Sign Up</h3>
+     <form action="signup" id="sign_up" method="POST">
+       <input class="signel" type="text" name="username" placeholder="Username">
+       <input class="signel" type="text" name="email" placeholder="Email address">
+       <input class="signel" type="password" name="password" placeholder="Password">
+       <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
+     </form>
+     <div class="sign_up_page_error_message">
+       {{error}}
+     </div>
+</div>

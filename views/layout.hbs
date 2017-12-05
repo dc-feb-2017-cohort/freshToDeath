@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+     <head>
+          <meta charset="utf-8">
+          <title>{{title}}</title>
+          <link rel="stylesheet" href="../styles.css">
+          <link href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz" rel="stylesheet">
+          <link href="https://fonts.googleapis.com/css?family=Pragati+Narrow|Shrikhand|Timmana" rel="stylesheet">
+          <link href="https://fonts.googleapis.com/css?family=BioRhyme" rel="stylesheet">
+     </head>
+     <body>
+          <!-- BODY TAG BELOW RECEIVES HTML FROM ALL HBS TEMPLATES AND RENDERS IT TO THE PAGE -->
+          {{#if session.loggedInUser}}
+            <form class="logbutton" action="/logout">
+              <button type="submit" class="btn btn-primary btn-lg">Logout</button>
+              <p class="logstatus">Logged in as: {{session.loggedInUser}}</p>
+            </form>
+          {{else}}
+          <div class="col-xl-6" id="righthead">
+            <a href="/signup"><button type="button" class="cool btn btn-primary btn-lg">Sign Up</button></a>
+             <form action="/" id="loginid" method="POST">
+                <input type="text" name="username" placeholder="Username">
+                <input type="password" name="password" placeholder="Password">
+                <button type="submit" class="btn btn-primary btn-lg">Login</button>
+             </form>
+          </div>
+          {{/if}}
+
+          {{{body}}}
+
+          <!-- JS FILES BELOW -->
+          <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+          <!-- STYLESHEET BELOW -->
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+     </body>
+</html>

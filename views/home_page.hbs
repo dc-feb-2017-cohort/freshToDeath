@@ -1,0 +1,29 @@
+<div id="page" class="container-fluid">
+    <div class="row">
+      <div id="header" class="col-xl-12">
+         <div class="col-xl-6" id="lefthead">
+            <a href="/"><p id="left_text">GetFresh!</p></a>
+         </div>
+         <div class="home_page_error_message">
+           {{error}}
+         </div>
+      </div>
+    </div>
+    <div class="row">
+     <div class="col-lg-12" id="intro">
+      <h1>Find your favorite place to buy produce!</h1>
+      <h5>Enter your zip code to find farmers markets near you.</h5>
+      <form action="/search_results" id="search_form" method="GET">
+        <input type="text" name="zipsearch" placeholder="search by zipcode" rows:>
+        <button type="submit" class="btn btn-primary btn-lg">Get Fresh!</button>
+      </form>
+      <div class="zip_error_message">
+        {{error_zip}}
+      </div>
+      <hr>
+      <div class="col-lg-12" class="recipe_search_main_page">
+       <h5>Then use our <a href="/recipessearch">Recipe Search Feature</a> to find out what to make for dinner!</h5>
+      </div>
+     </div>
+  </div>
+</div>

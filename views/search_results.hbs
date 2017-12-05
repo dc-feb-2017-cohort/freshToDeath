@@ -1,0 +1,77 @@
+
+
+<style>
+  /* Always set the map height explicitly to define the size of the div
+   * element that contains the map. */
+
+  #map {
+    height: 55%;
+    clear: both;
+    border-top: 5px solid #505357;
+    border-left: 5px solid #505357;
+    border-right: 5px solid #505357;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+
+
+    /*margin: 10px 190px 10px 190px;*/
+  }
+
+  #style_results {
+    /*margin: 0 175px 175px 175px;*/
+    border: 5px solid #505357;
+    padding-left: 5%;
+    padding-right: 5%;
+    font-size: 15px;
+    color: #505357;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    background-color: white;;
+  }
+
+  /* Optional: Makes the sample page fill the window. */
+  html, body {
+    height: 100%;
+    margin: 0 10px 0 10px;
+    padding: 0;
+  }
+</style>
+
+<div id="header" class="col-xl-12">
+   <div class="col-xl-6" id="lefthead">
+      <a href="/"><p id="left_text">GetFresh!</p></a>
+   </div>
+   <div class="home_page_error_message">
+     {{error}}
+   </div>
+</div>
+<div id="map"></div>
+<!-- TAG BELOW RECEIVES RESULTS FROM THE APP.GET CALL ON THE BACKEND.JS FILE WHICH IS CALLING THE USDA API  -->
+<div id="style_results">
+  {{#each USDAinfo}}<br>
+  <h3><div class="mapmarketletter">{{mapMarkerLetter}}</div> {{marketname}}</h3>
+  <h4>{{address}}
+  <a href="{{googlelink}}" target="_blank">Get directions</a></h4><br>
+  Products Offered:<br>{{products}}<br><br>
+  Schedule:<br>
+  {{schedule}}
+  <br><br>
+  <form class="market_button" action="/market_page/{{marketID}}">
+    <button type="submit" class="btn btn-primary btn-lg">MARKET PAGE</button>
+  </form>
+  <hr>
+{{/each}}
+</div>
+
+<script type="text/javascript">
+  var locations = [];
+  {{#each marketCoordinates}}
+    locations.push([{{this.lat}}, {{this.lng}}]);
+  {{/each}}
+  var center = {
+    lat: {{marketCoordinates.0.lat}},
+    lng: {{marketCoordinates.0.lng}}
+  };
+</script>
+<script src="googlemapsscript.js"></script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBb6ScimQwZIe_U4WWbctFa2SeR7qOK6Ck&callback=initMap"></script>

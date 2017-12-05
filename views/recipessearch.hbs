@@ -1,0 +1,79 @@
+<!-- STEVEN'S EDITS -->
+<style media="screen">
+
+  body {
+    background-image: url('/cutting_board.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+  }
+
+  #main h1 {
+    font-size: 65px;
+    color: white;
+
+  }
+  #header {
+    background-color: white;
+    height: 10vh;
+  }
+
+  #main h2 {
+    color: white;
+    font-weight: bolder;
+  }
+
+  #recipe_search_page {
+    font-size: 25px;
+    font-family: 'Pragati Narrow', sans-serif;
+    text-align: center;
+    letter-spacing: 3px;
+    /*margin-top: 150px;*/
+  }
+
+  input {
+    background-color: white;
+
+  }
+
+  .search_form > input {
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+
+  #main button {
+    background-color: green;
+    border: none;
+    border-radius: 0;
+    font-size: 25px;
+    letter-spacing: 2px;
+  }
+
+
+</style>
+
+<!-- <br> -->
+{{error}}
+<div id="header" class="col-xl-12">
+   <div class="col-xl-6" id="lefthead">
+      <a href="/"><p id="left_text">GetFresh!</p></a>
+   </div>
+</div>
+<div id="recipe_search_page">
+<div id="main"><br><br><br><br>
+  <h1>Did you <span>GetFresh</span>?</h1>
+<h2>Search for Recipes to Get Cooking!</h2>
+<form action="/recipes" class="recipes_search_form" method="GET">
+  <br>
+    <input type="text" name="ingredient1" placeholder="search by ingredient" rows:>
+    <input type="text" name="ingredient2" placeholder="search by ingredient" rows:>
+    <input type="text" name="ingredient3" placeholder="search by ingredient" rows:>
+    <input type="text" name="ingredient4" placeholder="search by ingredient" rows:>
+    <input type="text" name="ingredient5" placeholder="search by ingredient" rows:><br><br>
+    <button type="submit" class="btn btn-primary btn-lg">Search For Recipes</button>
+</form><br><br>
+</div>
+</div>
+<!-- </div>
+</div> -->
